@@ -2,9 +2,29 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        
-        <!-- <link rel="stylesheet" href="css/style.css">
-        <link rel="stylesheet" href="css/bootstrap.min.css"> -->
+        <!-- Relogio -->
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+            // Todo o código JavaScript que interage com o DOM vai aqui dentro
+            function atualizarRelogio() {
+                const agora = new Date();
+                let horas = agora.getHours();
+                let minutos = agora.getMinutes();
+                let segundos = agora.getSeconds();
+
+                horas = horas < 10 ? '0' + horas : horas;
+                minutos = minutos < 10 ? '0' + minutos : minutos;
+                segundos = segundos < 10 ? '0' + segundos : segundos;
+
+                const horaFormatada = `${horas}:${minutos}:${segundos}`;
+                document.getElementById('relogio').innerHTML = horaFormatada;
+            }
+
+            atualizarRelogio();
+            setInterval(atualizarRelogio, 1000);
+        });
+
+</script>
 </head>
 <?php
 date_default_timezone_set('America/Sao_Paulo');
@@ -18,12 +38,22 @@ if (!isset($_SESSION["usuario"]) || !isset($_SESSION["senha"])) {
 else {
     $usuario = $_SESSION["usuario"];
     echo "<h1>Bem vindo ao sistema, $usuario</h1>";
+    echo "<title>$usuario Dashboard</title>";
 }
-echo "<title>$usuario Dashboard</title>";
 
-
-$start = new DateTime('now');
-$end = new DateTime('now + 7 days');
+//Verifica se já passou do meio dia
+// Se já passou do meio dia, inicia o intervalo a partir do dia seguinte
+// Se não passou do meio dia, inicia o intervalo a partir de hoje
+$limite = new DateTime('today 12:00:00');
+$momento = new DateTime('now');
+$start = null;
+if ($momento > $limite) {
+    $start = new DateTime('now + 1 day');
+} else {
+    $start = new DateTime('now');
+} ;
+$end = clone $start; // Clona o objeto para não alterar o original
+$end->add(new DateInterval('P7D')); 
 // Formatação de data usando IntlDateFormatter
 $formatter = new IntlDateFormatter(
     'pt_BR',                      // Idioma/localidade
@@ -32,18 +62,22 @@ $formatter = new IntlDateFormatter(
     'America/Sao_Paulo',         // Fuso horário
     IntlDateFormatter::GREGORIAN // Calendário
 );
-
 $interval = new DateInterval('P1D'); // Intervalo de 1 dia
-$dates = [];
-for($i = $start; $i <= $end; $i->add($interval)){
-//   $dates[] = $i->format('d-m-Y l');
-  $dates[] = $formatter->format($i);
-}
+$dates = new DatePeriod(
+    $start, // Data de início
+    $interval, // Intervalo de 1 dia
+    $end // Data de fim
+);
+
 ?>
 
 <body>
-    <h2>Dashboard</h2>
-    <p>Esta é a página do dashboard, onde você pode acessar as funcionalidades do sistema.</p>
+    <h2>Arranchamento</h2>
+    <p>Selecione as datas de arranchamento abaixo: </p>
+    <div id="relogio">
+        <!-- A hora será exibida aqui -->
+        Carregando relógio...
+    </div>
     <a class="logout" href="logout.php" > Sair </a> <br>
     <form name="refeicoes" action="dashboard.php" method="post">
     <table border="1">
@@ -54,17 +88,16 @@ for($i = $start; $i <= $end; $i->add($interval)){
             <th align="center">Janta</th>
         </tr>
         <?php
-        $start = new DateTime('now');
-        
-        foreach ($dates as $index => $date) {
-            $dataDMA = $start->format('d-m-Y');
+      
+        foreach ($dates as $index => $d) {
+            
             echo "<tr>";
-            echo  '<td align="center">'.   $date . "</td>";   
-            echo  '<td align="center">'. '<input name="cafe['.$dataDMA.']"  value="1" type="checkbox">'.    "</td>";
-            echo  '<td align="center">'. '<input name="almoco['.$dataDMA.']" value="1" type="checkbox">'.    "</td>"; 
-            echo  '<td align="center">'. '<input name="janta['.$dataDMA.']" value="1" type="checkbox">'.    "</td>"; 
+            echo  '<td align="center">'.   $formatter->format($d) . "</td>";   
+            echo  '<td align="center">'. '<input name="cafe['.$d->format('Y-m-d').']"  value="1" type="checkbox">'.    "</td>";
+            echo  '<td align="center">'. '<input name="almoco['.$d->format('Y-m-d').']" value="1" type="checkbox">'.    "</td>"; 
+            echo  '<td align="center">'. '<input name="janta['.$d->format('Y-m-d').']" value="1" type="checkbox">'.    "</td>"; 
             echo "</tr>";
-            $start->add($interval); // Incrementa o dia
+
         }  
          ?>
     </table>
@@ -74,30 +107,48 @@ for($i = $start; $i <= $end; $i->add($interval)){
 </html>
 
 <?php 
+//DEPURANDO AQUI
 echo "<h1>Área de testes</h1>";
-echo "<table border='1'>";
-echo "<tr><th>Data</th><th>Café</th><th>Almoço</th><th>Janta</th></tr>";
 
-foreach ($dates as $index => $date) {
-    echo "<tr>";
-    echo "<td>$date</td>";
-    
-    
-    // Verifica se o café foi marcado
-    $cafeMarcado = isset($_POST['cafe'][$index]) ? 'Sim' : 'Não';
-    echo "<td>$cafeMarcado</td>";
-    
-    // Verifica se o almoço foi marcado
-    $almocoMarcado = isset($_POST['almoco'][$index]) ? 'Sim' : 'Não';
-    echo "<td>$almocoMarcado</td>";
-    
-    // Verifica se a janta foi marcada
-    $jantaMarcada = isset($_POST['janta'][$index]) ? 'Sim' : 'Não';
-    echo "<td>$jantaMarcada</td>";
-    
-    echo "</tr>";
-}
+// echo "<table border='1'>";
+// echo "<tr><th>Data</th><th>Café</th><th>Almoço</th><th>Janta</th></tr>";
 
-echo "</table>";
+// foreach ($dates as $index => $d) {
+//     $dataDB = $d->format('Y-m-d'); // Formata a data para o padrão do banco de dados
+//     $date = $formatter->format($d); // Formata a data para exibição
+//     echo "<tr>";
+//     echo "<td>dataBD: $dataDB data frontend: $date </td>";
+    
+//     // Verifica se o café foi marcado
+//     $cafeMarcado = isset($_POST['cafe'[$dataDB]]) ? 'Sim' : 'Não';
+//     echo "<td>$cafeMarcado</td>";
+    
+//     // Verifica se o almoço foi marcado
+//     $almocoMarcado = isset($_POST['almoco'][$dataDB]) ? 'Sim' : 'Não';
+//     echo "<td>$almocoMarcado</td>";
+    
+//     // Verifica se a janta foi marcada
+//     $jantaMarcada = isset($_POST['janta'][$dataDB]) ? 'Sim' : 'Não';
+//     echo "<td>$jantaMarcada</td>";
+    
+//     echo "</tr>";
+// }
+// echo "</table>";
+
+echo "$usuario arranchado para:<br>";
+echo "<ul>";
+echo "Café:";
+    foreach($_POST['cafe'] as $data => $valor) {
+        echo "<li>$data" . "</li>";
+    } ;
+echo "Almoço:";
+    foreach($_POST['almoco'] as $data => $valor) {
+        echo "<li>$data" . "</li>";
+    } ;
+echo "Janta:";
+    foreach($_POST['janta'] as $data => $valor) {
+        echo "<li>$data" . "</li>";
+    } ;
+echo "</ul>";
 echo "<h1>Fim área de testes</h1>";
 ?>
