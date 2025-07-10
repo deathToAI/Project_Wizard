@@ -33,6 +33,8 @@ if (empty($usuario)) {
     
     $_SESSION["usuario"] = $usuario;
     $_SESSION["senha"] = $senha;
+    // DEFINIR ROLE A PARTIR DO BANCO DE DADOS
+    // $_SESSION["role"] = $role;
     // Redireciona para a página de dashboard
     header("Location:dashboard.php");
     exit();
