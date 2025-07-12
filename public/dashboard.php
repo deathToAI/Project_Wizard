@@ -32,7 +32,7 @@ setlocale(LC_TIME, 'pt_BR.UTF-8');
 
 session_start();
 if (!isset($_SESSION["usuario"]) || !isset($_SESSION["senha"])) {
-    header("Location: login.php");
+    header("Location: ../index.php");
     exit();
 }  
 else {

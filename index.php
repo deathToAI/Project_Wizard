@@ -12,7 +12,7 @@ if (isset($_SESSION["erro"])) {
 ?>
 
 <h1>Bem vindo ao sistema </h1>
-<form method="post" action="<?php echo htmlspecialchars("public/login.php")  ?>" > 
+<form method="POST" action="<?php echo htmlspecialchars("lib/auth.php")  ?>" > 
 
 <label for="usuario" >Usuario</label>
 <input type="text" name="usuario" placeholder="sgtfulano"><br>

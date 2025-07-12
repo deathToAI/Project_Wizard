@@ -3,19 +3,22 @@
 
 // Inclui os arquivos necessários
 require_once __DIR__ . '/../lib/DbConnection.php';
-require_once __DIR__ . '../lib/functions.php';
-// ... outras inclusões como Auth, etc.
+require_once __DIR__ . '/../lib/auth.php';
+
+$pdo = DbConnection(); // Conexão PDO
+//Cria o admin se não existir
+if ( $pdo->query("SELECT COUNT(*) FROM users WHERE username = 'admin'")->fetchColumn() == 0) {
+    $stmt = $pdo->prepare("INSERT INTO users (username, password, nome_pg, role, grupo) VALUES (:username, :password, :nome_pg, :role, :grupo);");
+    $stmt->bindParam(':username', 'admin');
+    $stmt->bindParam(':password', password_hash('C@mole', PASSWORD_DEFAULT));
+    $stmt->bindParam(':nome_pg', 'Admin');
+    $stmt->bindParam(':role', 'admin');
+    $stmt->bindParam(':grupo', 1001); // Grupo 1 para admin
+}
+
 if(!isset($_SESSION)) {
     session_start();
 }
-
-$auth = new Auth();
-if (!$auth->isLoggedIn() || !$auth->isAdmin()) { // Supondo que você tenha um método isAdmin()
-    // Se não for admin, redireciona ou mostra erro
-    header('Location: login.php');
-    exit();
-}
-
 
 
 //CRIAR USUARIO
