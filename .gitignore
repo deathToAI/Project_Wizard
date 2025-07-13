@@ -1,3 +1,4 @@
 .env
 .htaccess
-script.sh
+*.sh
+*.sqlite

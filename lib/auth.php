@@ -1,9 +1,20 @@
 <?php 
 // File: lib/auth.php
 //AUTENTICADOR
+
+if (!isset($_SESSION)) {
+    session_start();
+}
+
+
 // Caso o usuário já esteja logado e não é admin, redireciona para a dashboard
 require_once '../lib/DbConnection.php';
 $pdo = DbConnection();
+if ($pdo === null) {
+    $_SESSION["erro"] = "Erro na conexão com o banco de dados";
+    header("Location:../index.php");
+    exit();
+}
 $usuario = htmlspecialchars($_POST["usuario"]) ?? '';
 $senha = htmlspecialchars($_POST["senha"]) ?? '';
 
@@ -15,14 +26,16 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 //User Vazio
-
-if (empty($username) || empty($password)) {
-    set_flash_message('Usuário e senha são obrigatórios.', 'error');
-    redirect('../index.php');
+if (empty($usuario) || empty($senha)) {
+    $_SESSION["erro"] = "Usuario ou senha não informados";
+    header('../index.php');
 }
 //User nao existe
-if ( $pdo->query("SELECT COUNT(*) FROM users WHERE username = '$usuario'")->fetchColumn() == 0) {
-    $_SESSION["erro"] = "Usuario não existe";
+$usercheck = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
+$usercheck->bindParam(':username', $usuario);
+$usercheck->execute();
+if (!$usercheck->fetchColumn()) {
+    $_SESSION["erro"] = "Usuário não existe";
     // Redireciona para a página de login
     header("Location:../index.php");
     exit();
@@ -51,7 +64,7 @@ if ( $pdo->query("SELECT COUNT(*) FROM users WHERE username = '$usuario'")->fetc
         exit();
     }
 }
-}
+
 
 ?>
 
