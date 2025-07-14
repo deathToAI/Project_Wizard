@@ -31,28 +31,31 @@ if (empty($usuario) || empty($senha)) {
     header('../index.php');
 }
 //User nao existe
-$usercheck = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
-$usercheck->bindParam(':username', $usuario);
+$usercheck = $pdo->prepare("SELECT id, username, password, role, grupo, nome_pg FROM users WHERE username = :username");
+$usercheck->bindParam(':username', $usuario, PDO::PARAM_STR);
 $usercheck->execute();
-if (!$usercheck->fetchColumn()) {
-    $_SESSION["erro"] = "Usuário não existe";
+$user = $usercheck->fetch(PDO::FETCH_ASSOC);
+
+if (!$user) {
+    $_SESSION["erro"] = "Credenciais não encontradas";
     // Redireciona para a página de login
     header("Location:../index.php");
     exit();
-} else {
-    // Verifica se a senha está correta
-    $stmt = $pdo->prepare("SELECT password FROM users WHERE username = :username");
-    $stmt->bindParam(':username', $usuario);
-    $stmt->execute();
-    //Retorna array associativo com os dados em uma array associativa(ex:['password' => 'hash_da_senha_do_banco'] )
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    if ($user && password_verify($senha, $user['password'])) {
+}
+// Verifica se a senha está correta
+if ($user && password_verify($senha, $user['password'])) {
         // Senha correta, inicia sessão
-        $_SESSION["usuario"] = htmlspecialchars($usuario);
-        $_SESSION["role"] = $user['role'];
-        $_SESSION["grupo"] = $user['grupo'];
-        if($usuario === 'admin'){
+        session_regenerate_id(true); // Gera um novo ID de sessão para segurança
+        $_SESSION["usuario"] = [
+            'id' => $user['id'],
+            'username' => htmlspecialchars($user['username']),
+            'role' => $user['role'],
+            'grupo' => $user['grupo'],
+            'nome_pg' => $user['nome_pg']
+
+        ];
+
+        if($role === 'admin'){
             header("Location:admin.php");
         }else{
             header("Location:dashboard.php");
@@ -63,7 +66,6 @@ if (!$usercheck->fetchColumn()) {
         header("Location:../index.php");
         exit();
     }
-}
 
 
 ?>

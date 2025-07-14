@@ -4,30 +4,38 @@
 // Inclui os arquivos necessários
 require_once __DIR__ . '/../lib/DbConnection.php';
 require_once __DIR__ . '/../lib/auth.php';
+header("X-Frame-Options: DENY");
+header("Content-Security-Policy: default-src 'self'");
 
-$pdo = DbConnection(); // Conexão PDO
-//Cria o admin se não existir
-if ( $pdo->query("SELECT COUNT(*) FROM users WHERE username = 'admin'")->fetchColumn() == 0) {
-    $stmt = $pdo->prepare("INSERT INTO users (username, password, nome_pg, role, grupo) VALUES (:username, :password, :nome_pg, :role, :grupo);");
-    $stmt->bindParam(':username', 'admin');
-    $stmt->bindParam(':password', password_hash('C@mole', PASSWORD_DEFAULT));
-    $stmt->bindParam(':nome_pg', 'Admin');
-    $stmt->bindParam(':role', 'admin');
-    $stmt->bindParam(':grupo', 1001); // Grupo 1 para admin
-}
-
-if(!isset($_SESSION)) {
+if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
+if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+        $_SESSION["erro"] = "Acesso negado. Você não tem permissão para acessar esta página.";
+        header("Location:../index.php");
+        exit();
+}
+// CSRF Token
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 //CRIAR USUARIO
 function createUser($username, $password, $nome_pg, $role,$grupo) {
+    $pdo = DbConnection(); // Conexão PDO
+
+    if ($pdo === null) {
+    $_SESSION["erro"] = "Erro na conexão com o banco de dados";
+    header("Location:../index.php");
+    exit();
+   }
     
     if (empty($username) || empty($password) || empty($nome_pg) || empty($role) || !isset($grupo)) {
             return ['success' => false, 'message' => 'Todos os campos são obrigatórios.'];
         }
-    try {$pdo = DbConnection();//Conexao PDO
+    try {
+    $pdo = DbConnection();//Conexao PDO
 
     //Criptografa o password
     $enc_password = password_hash($password, PASSWORD_DEFAULT);
@@ -60,12 +68,17 @@ $feedback_type = ''; // 'success' ou 'error'
 // Verifica se o formulário de criação de usuário foi enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_user'])) {
     // Coleta os dados do formulário
-    $username = $_POST['username'] ?? '';
+    $username = trim($_POST['username'] ?? '');
+    if (!preg_match('/^[a-zA-Z0-9_]{3,20}$/', $username)) {
+        return ['success' => false, 'message' => 'Username inválido'];
+    }
     $password = $_POST['password'] ?? '';
     $nome_pg = $_POST['nome_pg'] ?? '';
     $role = $_POST['role'] ?? 'comum';
-    $grupo = $_POST['grupo'] ?? 0;
-
+    $grupo = (int)$_POST['grupo']; // Converte para inteiro
+    if ($grupo !== 1 && $grupo !== 2) {
+        die("Grupo inválido!");
+    }
     // Chama a função para criar o usuário
     $result = createUser($username, $password, $nome_pg, $role, $grupo);
 
@@ -115,7 +128,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_user'])) {
             <select type="number" id="grupo" name="grupo" required >
                 <option value=1> Of/Sgt </option>
                 <option value=2> Cb/Sd </option>
-                <option value=3> Of/Sgt </option>
             </select>
         </p>
         <p>
