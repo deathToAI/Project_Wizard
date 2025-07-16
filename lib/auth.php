@@ -2,21 +2,9 @@
 // File: lib/auth.php
 //AUTENTICADOR
 
-if (!isset($_SESSION)) {
+if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
-
-
-// Caso o usuário já esteja logado e não é admin, redireciona para a dashboard
-require_once '../lib/DbConnection.php';
-$pdo = DbConnection();
-if ($pdo === null) {
-    $_SESSION["erro"] = "Erro na conexão com o banco de dados";
-    header("Location:../index.php");
-    exit();
-}
-$usuario = htmlspecialchars($_POST["usuario"]) ?? '';
-$senha = htmlspecialchars($_POST["senha"]) ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $_SESSION['erro'] = "Método de requisição inválido";
@@ -25,14 +13,26 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location:../index.php");
     exit();
 }
+
 //User Vazio
-if (empty($usuario) || empty($senha)) {
+if (empty($_POST['usuario']) || empty($_POST['senha'])) {
     $_SESSION["erro"] = "Usuario ou senha não informados";
-    header('../index.php');
+    header("Location: ../index.php");
 }
+// Caso o usuário já esteja logado e não é admin, redireciona para a dashboard
+require_once '../lib/DbConnection.php';
+$pdo = DbConnection();
+if ($pdo === null) {
+    $_SESSION["erro"] = "Erro na conexão com o banco de dados";
+    header("Location:../index.php");
+    exit();
+}
+$username = htmlspecialchars($_POST['usuario']);
+$userpass = $_POST['senha'];
+
 //User nao existe
 $usercheck = $pdo->prepare("SELECT id, username, password, role, grupo, nome_pg FROM users WHERE username = :username");
-$usercheck->bindParam(':username', $usuario, PDO::PARAM_STR);
+$usercheck->bindParam(':username', $username, PDO::PARAM_STR);
 $usercheck->execute();
 $user = $usercheck->fetch(PDO::FETCH_ASSOC);
 
@@ -43,10 +43,10 @@ if (!$user) {
     exit();
 }
 // Verifica se a senha está correta
-if ($user && password_verify($senha, $user['password'])) {
+if (password_verify($userpass, $user['password'])) {
         // Senha correta, inicia sessão
         session_regenerate_id(true); // Gera um novo ID de sessão para segurança
-        $_SESSION["usuario"] = [
+        $_SESSION["auth_data"] = [
             'id' => $user['id'],
             'username' => htmlspecialchars($user['username']),
             'role' => $user['role'],
@@ -55,13 +55,12 @@ if ($user && password_verify($senha, $user['password'])) {
 
         ];
 
-        if($role === 'admin'){
-            header("Location:admin.php");
-        }else{
-            header("Location:dashboard.php");
-        }
+// 8. Redirecionamento seguro
+        $redirect = ($user['role'] === 'admin') ? '../config/admin.php' : '../public/dashboard.php';
+        header("Location: " . $redirect);
         exit();
-    } else {
+        
+    }else {
         $_SESSION["erro"] = "Senha incorreta";
         header("Location:../index.php");
         exit();
@@ -71,5 +70,3 @@ if ($user && password_verify($senha, $user['password'])) {
 ?>
 
 
-
-?>

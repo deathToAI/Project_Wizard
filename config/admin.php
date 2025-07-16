@@ -1,25 +1,27 @@
 <?php
 // config/admin.php
 
-// Inclui os arquivos necessários
-require_once __DIR__ . '/../lib/DbConnection.php';
-require_once __DIR__ . '/../lib/auth.php';
-header("X-Frame-Options: DENY");
-header("Content-Security-Policy: default-src 'self'");
-
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-if (empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+// 2. Verifica se há dados de autenticação
+if (empty($_SESSION['auth_data']['role']) || $_SESSION['auth_data']['role'] !== 'admin') {
         $_SESSION["erro"] = "Acesso negado. Você não tem permissão para acessar esta página.";
         header("Location:../index.php");
         exit();
 }
-// CSRF Token
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
+// Inclui os arquivos necessários
+require_once __DIR__ . '/../lib/DbConnection.php';
+
+header("X-Frame-Options: DENY");
+header("Content-Security-Policy: default-src 'self'");
+
+
+// // CSRF Token
+// if (empty($_SESSION['csrf_token'])) {
+//     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+// }
 
 //CRIAR USUARIO
 function createUser($username, $password, $nome_pg, $role,$grupo) {
@@ -101,6 +103,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_user'])) {
     <title>Painel Admin</title>
 </head>
 <body>
+    <?php
+    echo "<h1>Bem vindo,". $_SESSION['auth_data']['nome_pg'].",ao painel de Admin</h1>";
+     ?>
     <h1>Criar Usuário</h1>
 
     <?php if ($feedback_message): ?>

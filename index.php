@@ -1,8 +1,10 @@
 <html>
 <body>
 <?php
-session_start();
-
+if (!isset($_SESSION)) {
+    session_start();
+}
+$_SESSION["token"] = bin2hex(random_bytes(32));
 // Verifica se o formulário foi enviado
 $erro = '';
 if (isset($_SESSION["erro"])) {
@@ -12,8 +14,8 @@ if (isset($_SESSION["erro"])) {
 ?>
 
 <h1>Bem vindo ao sistema </h1>
-<form method="POST" action="<?php echo htmlspecialchars("lib/auth.php")  ?>" > 
-
+<form action="lib/auth.php" method="POST">" > 
+<input type="hidden" name="token" value="<?=$_SESSION["token"]?>">
 <label for="usuario" >Usuario</label>
 <input type="text" name="usuario" placeholder="sgtfulano"><br>
 
@@ -26,6 +28,7 @@ if (isset($_SESSION["erro"])) {
 <?php if (!empty($erro)): ?>
 <div style="color:red;"> <?php echo $erro; ?>  </div>
 <?php endif; ?>
+
 </form>
 
 </body>
