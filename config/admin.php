@@ -19,78 +19,53 @@ header("Content-Security-Policy: default-src 'self'");
 
 
 // // CSRF Token
-// if (empty($_SESSION['csrf_token'])) {
-//     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-// }
-
-//CRIAR USUARIO
-function createUser($username, $password, $nome_pg, $role,$grupo) {
-    $pdo = DbConnection(); // Conexão PDO
-
-    if ($pdo === null) {
-    $_SESSION["erro"] = "Erro na conexão com o banco de dados";
-    header("Location:../index.php");
-    exit();
-   }
-    
-    if (empty($username) || empty($password) || empty($nome_pg) || empty($role) || !isset($grupo)) {
-            return ['success' => false, 'message' => 'Todos os campos são obrigatórios.'];
-        }
-    try {
-    $pdo = DbConnection();//Conexao PDO
-
-    //Criptografa o password
-    $enc_password = password_hash($password, PASSWORD_DEFAULT);
-    $sql="INSERT INTO users (username, password, nome_pg, role, grupo) VALUES (:username, :password, :nome_pg, :role, :grupo);";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':username', $username);
-    $stmt->bindParam(':password', $enc_password);
-    $stmt->bindParam(':nome_pg', $nome_pg);
-    $stmt->bindParam(':role', $role);
-    $stmt->bindParam(':grupo', $grupo);   
-    $stmt->execute();
-
-    return ['success' => true, 'message' => 'Usuário criado com sucesso!'];
-    
-    }catch (PDOException $e){
-            if ($e->getCode()==='23000'){
-                return ['success' => false, 'message' => 'Erro: O nome de usuário já existe.'];
-
-            }else{
-                // Em produção, você logaria o erro detalhado em vez de exibi-lo
-                return ['success' => false, 'message' => 'Erro de banco de dados: ' . $e->getMessage()];
-            }
-    }
+if (empty($_SESSION['token'])) {
+    $_SESSION['token'] = bin2hex(random_bytes(32));
 }
-
 // Variável para armazenar a mensagem para o usuário
 $feedback_message = '';
-$feedback_type = ''; // 'success' ou 'error'
+$feedback_type = '';
 
-// Verifica se o formulário de criação de usuário foi enviado
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_user'])) {
-    // Coleta os dados do formulário
-    $username = trim($_POST['username'] ?? '');
-    if (!preg_match('/^[a-zA-Z0-9_]{3,20}$/', $username)) {
-        return ['success' => false, 'message' => 'Username inválido'];
-    }
-    $password = $_POST['password'] ?? '';
-    $nome_pg = $_POST['nome_pg'] ?? '';
-    $role = $_POST['role'] ?? 'comum';
-    $grupo = (int)$_POST['grupo']; // Converte para inteiro
-    if ($grupo !== 1 && $grupo !== 2) {
-        die("Grupo inválido!");
-    }
-    // Chama a função para criar o usuário
-    $result = createUser($username, $password, $nome_pg, $role, $grupo);
 
-    // Verifica o resultado e define a mensagem de feedback
-    if ($result['success']) {
-        $feedback_type = 'success';
-    } else {
-        $feedback_type = 'error';
+function listUsers(){
+    echo '<h2>Usuários Cadastrados</h2>';
+    try {
+        $pdo = DbConnection();
+        if ($pdo === null) {
+            echo "<strong>ERRO:</strong> Não foi possível conectar ao banco de dados.";
+            exit();
+        }
+        $stmt = $pdo->query("SELECT id, username, nome_pg, role, grupo FROM users");
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        echo "<table border='1'>
+            <tr>
+                <th>ID(database id)</th>
+                <th>Usuario(username)</th>
+                <th>Nome de Guerra(nome_pg)</th>
+                <th>Tipo(role)</th>
+                <th>Grupo(grupo)</th>
+                <th>Ações</th>           
+            </tr>";
+        foreach ($users as $user) {
+            echo "<tr>";
+            echo "<td>" . htmlspecialchars($user['id']) . "</td>";
+            echo "<td>" . htmlspecialchars($user['username']) . "</td>";
+            echo "<td>" . htmlspecialchars($user['nome_pg']) . "</td>";
+            echo "<td>" . htmlspecialchars($user['role']) . "</td>";
+            echo "<td>" . htmlspecialchars($user['grupo']) . "</td>";
+            echo "<td>
+                    <a href='edit_user.php?action=edit&id=" . $user['id'] . "'>Editar</a> |
+                    <a href='delete_user.php?action=delete&id=" . $user['id'] . "' onclick='return confirm(\"Tem certeza?\");'>Deletar</a>
+                  </td>";
+            echo "</tr>";
+
+            echo "</tr>";
+        }
+        echo "</table>";
+
+    } catch (PDOException $e) {
+        echo "<strong>ERRO:</strong> " . htmlspecialchars($e->getMessage());
     }
-    $feedback_message = $result['message'];
 }
 
 ?>
@@ -101,20 +76,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_user'])) {
 <html>
 <head>
     <title>Painel Admin</title>
+    <link rel="stylesheet" href="../public/styles.css">
 </head>
 <body>
     <?php
-    echo "<h1>Bem vindo,". $_SESSION['auth_data']['nome_pg'].",ao painel de Admin</h1>";
+    echo "<h1>Bem vindo,". htmlspecialchars($_SESSION['auth_data']['nome_pg']).",ao painel de Admin</h1>";
      ?>
-    <h1>Criar Usuário</h1>
-
+    <h2>Gerenciamento de usuários</h2>
     <?php if ($feedback_message): ?>
         <div class="feedback <?php echo $feedback_type; ?>">
             <?php echo htmlspecialchars($feedback_message); ?>
         </div>
     <?php endif; ?>
-
-    <form action="admin.php" method="POST">
+<div id="Criar Usuario" class="tabcontent">
+        <h3>Criar Usuário</h3>
+        <p>Preencha os campos abaixo para criar um novo usuário:</p>
+        <form action="create_user.php" method="GET">
         <input type="hidden" name="create_user" value="1">
         <p>
             <label for="username">Username:</label><br>
@@ -143,8 +120,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_user'])) {
                 <option value="admin">Admin</option>
             </select>
         </p>
+        <input type="hidden" name="token" value="<?php $_SESSION['token']?>">
         <button type="submit">Criar Usuário</button>
     </form>
+    </div>
 
+    
+<?php
+// Chama a função para listar os usuários
+listUsers();
+
+?>
 </body>
 </html>

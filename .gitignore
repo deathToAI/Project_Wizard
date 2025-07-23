@@ -1,5 +1,0 @@
-.env
-.htaccess
-*.sh
-*.sqlite
-gerar_pass.php
