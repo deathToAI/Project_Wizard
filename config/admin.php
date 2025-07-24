@@ -95,7 +95,7 @@ function listUsers(){
         <input type="hidden" name="create_user" value="1">
         <p>
             <label for="username">Username:</label><br>
-            <input type="text" id="username" name="username" required>
+            <input type="text" id="username" name="username" placeholder="sgtfulano" required>
         </p>
         <p>
             <label for="password">Password:</label><br>
@@ -103,7 +103,7 @@ function listUsers(){
         </p>
         <p>
             <label for="nome_pg">Nome de Guerra:</label><br>
-            <input type="text" id="nome_pg" name="nome_pg" required>
+            <input type="text" id="nome_pg" name="nome_pg" placeholder="Sgt Fulano" required>
         </p>
         <p>
             <label for="grupo">Grupo:</label><br>
@@ -127,6 +127,17 @@ function listUsers(){
 
     
 <?php
+// Verifica o feedback da criação do usuário
+if (isset($_SESSION['createUserResult'])) {
+    echo $_SESSION['createUserResult']['message'];
+    unset($_SESSION['createUserResult']); // Limpa a mensagem após exibi-la
+}
+// Verifica o feedback da deleção do usuário
+if (isset($_SESSION['deleteUserResult'])) {
+    echo $_SESSION['deleteUserResult']['message'];
+    unset($_SESSION['deleteUserResult']); // Limpa a mensagem após exibi-la
+}
+
 // Chama a função para listar os usuários
 listUsers();
 

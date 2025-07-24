@@ -4,8 +4,10 @@
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
-
-if (!isset($_POST['create_user'])) {
+if (empty($_SESSION['token'])) {
+    $_SESSION['token'] = bin2hex(random_bytes(32));
+}
+if (!isset($_GET['create_user'])) {
     die("Ação inválida.");
 }
 require_once __DIR__ . '/../lib/DbConnection.php';
@@ -35,6 +37,7 @@ function createUser($username, $password, $nome_pg, $role,$grupo) {
     $stmt->execute();
 
     return ['success' => true, 'message' => 'Usuário criado com sucesso!'];
+    exit();
     
     }catch (PDOException $e){
             if ($e->getCode()==='23000'){
@@ -46,30 +49,22 @@ function createUser($username, $password, $nome_pg, $role,$grupo) {
             }
     }
 }
-$username = trim($_POST['username'] ?? '');
+$username = trim($_GET['username'] ?? '');
 if (!preg_match('/^[a-zA-Z0-9_]{3,20}$/', $username)) {
     return ['success' => false, 'message' => 'Username inválido'];
 }
-$password = $_POST['password'] ?? '';
-$nome_pg = $_POST['nome_pg'] ?? '';
-$role = $_POST['role'] ?? 'comum';
-$grupo = (int)$_POST['grupo']; // Converte para inteiro
+$password = $_GET['password'] ?? '';
+$nome_pg = $_GET['nome_pg'] ?? '';
+$role = $_GET['role'] ?? 'comum';
+$grupo = (int)$_GET['grupo']; // Converte para inteiro
 if ($grupo !== 1 && $grupo !== 2) {
     die("Grupo inválido!");
 }
 // Chama a função para criar o usuário
 $result = createUser($username, $password, $nome_pg, $role, $grupo);
-
-// Verifica o resultado e define a mensagem de feedback
-if ($result['success']) {
-    $feedback_type = 'success';
-} else {
-    $feedback_type = 'error';
-}
-$feedback_message = $result['message'];
-echo $feedback_message;
-// Redireciona para evitar reenvio do formulário
-header("Location: admin.php");
-exit();
+// Armazena o resultado na sessão
+$_SESSION['createUserResult']= $result;
+// Redireciona para a página de administração
+header('Location: admin.php');
 
 ?>
