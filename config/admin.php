@@ -54,8 +54,8 @@ function listUsers(){
             echo "<td>" . htmlspecialchars($user['role']) . "</td>";
             echo "<td>" . htmlspecialchars($user['grupo']) . "</td>";
             echo "<td>
-                    <a href='edit_user.php?action=edit&id=" . $user['id'] . "'>Editar</a> |
-                    <a href='delete_user.php?action=delete&id=" . $user['id'] . "' onclick='return confirm(\"Tem certeza?\");'>Deletar</a>
+                    <a href='edit_user.php?action=edit&id=" . $user['id'] . "'>✏️Editar</a> |
+                    <a href='delete_user.php?action=delete&id=" . $user['id'] . "' onclick='return confirm(\"Tem certeza?\");'>🗑️ Deletar</a>
                   </td>";
             echo "</tr>";
 
@@ -88,7 +88,7 @@ function listUsers(){
             <?php echo htmlspecialchars($feedback_message); ?>
         </div>
     <?php endif; ?>
-<div id="Criar Usuario" class="tabcontent">
+<div id="Criar Usuario" class="painel">
         <h3>Criar Usuário</h3>
         <p>Preencha os campos abaixo para criar um novo usuário:</p>
         <form action="create_user.php" method="GET">

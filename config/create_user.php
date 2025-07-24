@@ -1,7 +1,14 @@
-
-
 <?php
-//create_user.php
+// config/create_user.php
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
+if (!isset($_POST['create_user'])) {
+    die("Ação inválida.");
+}
+require_once __DIR__ . '/../lib/DbConnection.php';
 function createUser($username, $password, $nome_pg, $role,$grupo) {
     $pdo = DbConnection(); // Conexão PDO
 

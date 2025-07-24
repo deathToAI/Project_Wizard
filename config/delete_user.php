@@ -1,7 +1,7 @@
 <?php
-//delete_user.php
+// config/delete_user.php
 
-
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 function deleteUser($userId) {
     $pdo = DbConnection(); // Conexão PDO
 
@@ -20,5 +20,6 @@ function deleteUser($userId) {
         return ['success' => false, 'message' => 'Erro ao deletar usuário: ' . $e->getMessage()];
     }
 }
+deleteUser($id);
 
 ?>
