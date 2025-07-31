@@ -4,7 +4,7 @@
 echo '<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Security-Policy" style-src-attr \'sha256-pILX+5FGCpLRHvNBgtABIdSMmytrYudGxJBUYXY1t0s=\' \'unsafe-hashes\';>
+    <meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'admin.js\' \'unsafe-inline\'; style-src \'../public/css/styles.css\' \'unsafe-inline\';">
     <title>Painel Admin</title>
     <link rel="stylesheet" href="/public/css/styles.css" onload="this.media=\'all\'">
     <noscript><link rel="stylesheet" href="/public/css/styles.css"></noscript>
