@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Manipulador para o botão de fechar
     document.querySelector('.close-btn').addEventListener('click', closeModal);
-    
+    document.querySelector('.btn-secondary').addEventListener('click', closeModal);
     // Fechar modal ao clicar fora
     document.getElementById('editModal').addEventListener('click', function(e) {
         if (e.target === this) {

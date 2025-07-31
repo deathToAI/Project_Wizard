@@ -186,7 +186,7 @@ echo '<div id="editModal" class="editModal">
                 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Salvar</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="button" class="btn btn-secondary">Cancelar</button>
                 </div>
             </form>
         </div>
