@@ -1,9 +1,20 @@
 <?php
 // config/admin.php
 
+echo '<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Security-Policy" style-src-attr \'sha256-pILX+5FGCpLRHvNBgtABIdSMmytrYudGxJBUYXY1t0s=\' \'unsafe-hashes\';>
+    <title>Painel Admin</title>
+    <link rel="stylesheet" href="/public/css/styles.css" onload="this.media=\'all\'">
+    <noscript><link rel="stylesheet" href="/public/css/styles.css"></noscript>
+    <script src="admin.js" defer></script>
+    <link rel="icon" href="data:,">
+</head>';
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
+
 
 // 2. Verifica se há dados de autenticação
 if (empty($_SESSION['auth_data']['role']) || $_SESSION['auth_data']['role'] !== 'admin') {
@@ -11,6 +22,7 @@ if (empty($_SESSION['auth_data']['role']) || $_SESSION['auth_data']['role'] !== 
         header("Location:../index.php");
         exit();
 }
+
 // Inclui os arquivos necessários
 require_once __DIR__ . '/../lib/DbConnection.php';
 
@@ -25,7 +37,6 @@ if (empty($_SESSION['token'])) {
 // Variável para armazenar a mensagem para o usuário
 $feedback_message = '';
 $feedback_type = '';
-
 
 function listUsers(){
     echo '<h2>Usuários Cadastrados</h2>';
@@ -54,12 +65,11 @@ function listUsers(){
             echo "<td>" . htmlspecialchars($user['role']) . "</td>";
             echo "<td>" . htmlspecialchars($user['grupo']) . "</td>";
             echo "<td>
-                    <a href='edit_user.php?action=edit&id=" . $user['id'] . "'>✏️Editar</a> |
+                    <a href='#' data-action='edit' data-user='".htmlspecialchars(json_encode($user), ENT_QUOTES, 'UTF-8')."'>✏️Editar</a> |
                     <a href='delete_user.php?action=delete&id=" . $user['id'] . "' onclick='return confirm(\"Tem certeza?\");'>🗑️ Deletar</a>
                   </td>";
             echo "</tr>";
 
-            echo "</tr>";
         }
         echo "</table>";
 
@@ -72,12 +82,6 @@ function listUsers(){
 <!-- ===================-->
 <!-- HTML (FRONT-END)   -->
 <!-- ===================-->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Painel Admin</title>
-    <link rel="stylesheet" href="../public/styles.css">
-</head>
 <body>
     <?php
     echo "<h1>Bem vindo,". htmlspecialchars($_SESSION['auth_data']['nome_pg']).",ao painel de Admin</h1>";
@@ -91,7 +95,7 @@ function listUsers(){
 <div id="Criar Usuario" class="painel">
         <h3>Criar Usuário</h3>
         <p>Preencha os campos abaixo para criar um novo usuário:</p>
-        <form action="create_user.php" method="GET">
+        <form action="create_user.php" method="POST">
         <input type="hidden" name="create_user" value="1">
         <p>
             <label for="username">Username:</label><br>
@@ -120,7 +124,7 @@ function listUsers(){
                 <option value="admin">Admin</option>
             </select>
         </p>
-        <input type="hidden" name="token" value="<?php $_SESSION['token']?>">
+        <input type="hidden" name="token" value="<?php echo $_SESSION['token'];?>">
         <button type="submit">Criar Usuário</button>
     </form>
     </div>
@@ -137,8 +141,58 @@ if (isset($_SESSION['deleteUserResult'])) {
     echo $_SESSION['deleteUserResult']['message'];
     unset($_SESSION['deleteUserResult']); // Limpa a mensagem após exibi-la
 }
-
+if (isset($_SESSION['editUserResult'])) {
+    echo $_SESSION['editUserResult']['message'];
+    unset($_SESSION['editUserResult']); // Limpa a mensagem após exibi-la
+}
+echo '<div id="editModal" class="editModal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <form id="editForm" method="POST" action="edit_user.php">
+                <input type="hidden" name="id" id="editId"><br>
+                <input type="hidden" name="token" value="'.$_SESSION['token'].'">
+                
+                <div class="form-group">
+                    <label for="username">Usuário:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="nome_pg">Nome de Guerra:</label>
+                    <input type="text" id="nome_pg" name="nome_pg" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Senha:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="role">Função:</label>
+                    <select id="role" name="role" required>
+                        <option value="comum">Comum</option>
+                        <option value="admin">Admin</option>
+                        <option value="furriel">Furriel</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="grupo">Grupo:</label>
+                    <select id="grupo" name="grupo" required>
+                        <option value="1">Of/Sgt</option>
+                        <option value="2">Cb/Sd</option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>';
 // Chama a função para listar os usuários
+echo "<br>Seu Token:$_SESSION[token]";
 listUsers();
 
 ?>

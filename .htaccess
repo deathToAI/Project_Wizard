@@ -1,0 +1,18 @@
+
+RewriteEngine On
+RewriteRule ^$ public/ [L]
+RewriteRule (.*) public/$1 [L]
+
+<IfModule php5_module>
+    php_flag session.cookie_httponly on
+</IfModule>
+<Directory /home/dtai/Área de trabalho/Scripts/Tutorials/Project_Wizard/config>
+    Require all denied
+</Directory>
+<Directory /home/dtai/Área de trabalho/Scripts/Tutorials/Project_Wizard/lib>
+    Require all denied
+</Directory>
+<Directory /home/dtai/Área de trabalho/Scripts/Tutorials/Project_Wizard/storage>
+    Require all denied
+</Directory>
+
