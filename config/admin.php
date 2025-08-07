@@ -4,11 +4,12 @@
 echo '<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'admin.js\' \'unsafe-inline\'; style-src \'../public/css/styles.css\' \'unsafe-inline\';">
+
+    <meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\' \'unsafe-inline\'; style-src \'self\' \'unsafe-inline\';">
     <title>Painel Admin</title>
     <link rel="stylesheet" href="/public/css/styles.css" onload="this.media=\'all\'">
-    <noscript><link rel="stylesheet" href="/public/css/styles.css"></noscript>
-    <script src="admin.js" defer></script>
+    <noscript><link rel="stylesheet" href="public/css/styles.css"></noscript>
+    <script src="admin.js" ></script>
     <link rel="icon" href="data:,">
 </head>';
 if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -145,7 +146,8 @@ if (isset($_SESSION['editUserResult'])) {
     echo $_SESSION['editUserResult']['message'];
     unset($_SESSION['editUserResult']); // Limpa a mensagem após exibi-la
 }
-echo '<div id="editModal" class="editModal">
+function define_modal(){
+    echo '<div id="editModal" class="editModal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
             <form id="editForm" method="POST" action="edit_user.php">
@@ -191,8 +193,10 @@ echo '<div id="editModal" class="editModal">
             </form>
         </div>
     </div>';
+}
 // Chama a função para listar os usuários
 echo "<br>Seu Token:$_SESSION[token]";
+define_modal();
 listUsers();
 
 ?>

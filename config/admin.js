@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.btn-secondary').addEventListener('click', closeModal);
     // Fechar modal ao clicar fora
     document.getElementById('editModal').addEventListener('click', function(e) {
-        if (e.target === this) {
+        if (e.target === this.parentNode) {
             closeModal();
         }
     });
