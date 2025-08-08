@@ -35,7 +35,35 @@ $dates = new DatePeriod(
 );
 $today = $formatter->format($start);
 echo $today;
-
+echo "<script> 
+        function updateDateHeader(dateValue) {
+            var formatter = new Intl.DateTimeFormat('pt-BR', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            // CORREÇÃO: Força a interpretação da data como local
+            // Em vez de usar new Date(dateValue) diretamente
+            var dateParts = dateValue.split('-'); // ['2025', '07', '05']
+            var year = parseInt(dateParts[0]);
+            var month = parseInt(dateParts[1]) - 1; // Mês em JavaScript é 0-indexado
+            var day = parseInt(dateParts[2]);
+            
+            // Cria a data usando o construtor local
+            var date = new Date(year, month, day);
+            
+            var formattedDate = formatter.format(date);
+            document.getElementById('diaselecionado').innerHTML = 'Data: ' + formattedDate;
+        }
+        function initializeDateHeader() {
+        var selectElement = document.getElementById('dia');
+        updateDateHeader(selectElement.value);
+    }
+    
+    document.addEventListener('DOMContentLoaded', initializeDateHeader);
+    </script>";
 echo '<h2>Usuários Arranchados</h2>';
     try {
         $pdo = DbConnection();
@@ -46,16 +74,21 @@ echo '<h2>Usuários Arranchados</h2>';
         $stmt = $pdo->query("SELECT id, username, nome_pg, role, grupo FROM users");
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo "<Selecione a data>
-        <select>";
-        foreach($dates as $date){
-            echo "<option value=". $date->format('Y-m-d') .">" . $formatter->format($date) . "</option>";
+        <select name=\"dia\" id=\"dia\" onchange=\"updateDateHeader(this.value)\">";
+        foreach($dates as $index => $date){
+            if($index == 0){
+                echo "<option value=\"" . $date->format('Y-m-d') . "\" selected>" . $formatter->format($date) . "</option>";
+            } else {
+                echo "<option value=\"" . $date->format('Y-m-d') . "\">" . $formatter->format($date) . "</option>";
+            }
         }
         echo "</select>";
-
-        echo "<table border='1'>
+       
+        echo "<table align='center' width='80%' border='1'>
             <tr>
                 <tr>
-                    <th colspan=\"5\" align=\"center\">Data</th>
+                    <th id=\"diaselecionado\" colspan=\"4\" align=\"center\">  </th> 
+                     
                 </tr>
                 <th align=\"center\>Usuario(username)</th>
                 <th align=\"center\>Nome de Guerra</th>
@@ -68,18 +101,15 @@ echo '<h2>Usuários Arranchados</h2>';
         
         foreach ($users as $user) {
             echo "<tr>";
-            echo "<td>" . htmlspecialchars($user['username']) . "</td>";
+            
             echo "<td>" . htmlspecialchars($user['nome_pg']) . "</td>";
             echo "<td>" . htmlspecialchars($user['cafe']) . "</td>";
-            echo "<td>" . htmlspecialchars($user['grupo']) . "</td>";
-            echo "<td>
-                    
-                  </td>";
+            echo "<td>" . htmlspecialchars($user['almoco']) . "</td>";
+            echo "<td>" . htmlspecialchars($user['janta']) . "</td>";
             echo "</tr>";
 
         }
         echo "</table>";
-
     } catch (PDOException $e) {
         echo "<strong>ERRO:</strong> " . htmlspecialchars($e->getMessage());
     }
