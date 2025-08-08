@@ -56,7 +56,21 @@ if (password_verify($userpass, $user['password'])) {
         ];
 
 // 8. Redirecionamento seguro
-        $redirect = ($user['role'] === 'admin') ? '../config/admin.php' : '../public/dashboard.php';
+        switch ($user['role']) {
+            case 'admin':
+                $_SESSION["admin"] = true;
+                $redirect = '../config/admin.php';
+                break;
+            case 'furriel':
+                $_SESSION["furriel"] = true;
+                $redirect = '../config/furriel.php';
+                break;
+            case 'comum':
+                $_SESSION["comum"] = true;
+                $redirect = '../public/dashboard.php';
+
+                break;
+        }
         header("Location: " . $redirect);
         exit();
         

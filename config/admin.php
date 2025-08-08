@@ -27,10 +27,6 @@ if (empty($_SESSION['auth_data']['role']) || $_SESSION['auth_data']['role'] !== 
 // Inclui os arquivos necessários
 require_once __DIR__ . '/../lib/DbConnection.php';
 
-header("X-Frame-Options: DENY");
-header("Content-Security-Policy: default-src 'self'");
-
-
 // // CSRF Token
 if (empty($_SESSION['token'])) {
     $_SESSION['token'] = bin2hex(random_bytes(32));
