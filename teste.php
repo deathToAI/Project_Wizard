@@ -1,9 +1,9 @@
 <?php
-require_once 'lib/DbConnection.php';
+require_once 'database/DbConnection.php';
 
 try {
     // Mostra configurações
-    $config = require 'config/database.php';
+    $config = require './database/database.php';
     echo "Driver: " . $config['driver'] . "<br>";
     echo "Caminho: " . $config['database_path'] . "<br>";
     

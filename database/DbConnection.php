@@ -7,7 +7,7 @@
  */
 function DbConnection() {
     // Caminho completo para o arquivo de configuração
-    $configFile = __DIR__ . '/../config/database.php';
+    $configFile = __DIR__ . '/database.php';
     
     // Verifica se o arquivo de configuração existe
     if (!file_exists($configFile)) {

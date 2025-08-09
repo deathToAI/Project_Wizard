@@ -1,5 +1,5 @@
 <?php 
-//config/furriel.php
+//config/furriel/furriel.php
 
 // //Verifica se há dados de autenticação
 // if (empty($_SESSION['auth_data']['role']) || $_SESSION['auth_data']['role'] !== 'furriel') {
@@ -9,7 +9,7 @@
 // }
 
 // Inclui os arquivos necessários
-require_once __DIR__ . '/../lib/DbConnection.php';
+require_once __DIR__ . '/../../database/DbConnection.php';
 
 // if (empty($_SESSION['token'])) {
 //     $_SESSION['token'] = bin2hex(random_bytes(32));
@@ -34,36 +34,14 @@ $dates = new DatePeriod(
     $end // Data de fim
 );
 $today = $formatter->format($start);
-echo $today;
-echo "<script> 
-        function updateDateHeader(dateValue) {
-            var formatter = new Intl.DateTimeFormat('pt-BR', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            
-            // CORREÇÃO: Força a interpretação da data como local
-            // Em vez de usar new Date(dateValue) diretamente
-            var dateParts = dateValue.split('-'); // ['2025', '07', '05']
-            var year = parseInt(dateParts[0]);
-            var month = parseInt(dateParts[1]) - 1; // Mês em JavaScript é 0-indexado
-            var day = parseInt(dateParts[2]);
-            
-            // Cria a data usando o construtor local
-            var date = new Date(year, month, day);
-            
-            var formattedDate = formatter.format(date);
-            document.getElementById('diaselecionado').innerHTML = 'Data: ' + formattedDate;
-        }
-        function initializeDateHeader() {
-        var selectElement = document.getElementById('dia');
-        updateDateHeader(selectElement.value);
-    }
-    
-    document.addEventListener('DOMContentLoaded', initializeDateHeader);
-    </script>";
+echo "<!DOCTYPE html><br>
+<html>
+<head>
+<body>";
+echo "<script src=\"furriel.js\" defer> </script>";
+
+echo "Data: ". $today   . "<br> Hora: <a id=\"relogio\">--:--:--</a>" ;
+
 echo '<h2>Usuários Arranchados</h2>';
     try {
         $pdo = DbConnection();
@@ -103,9 +81,9 @@ echo '<h2>Usuários Arranchados</h2>';
             echo "<tr>";
             
             echo "<td>" . htmlspecialchars($user['nome_pg']) . "</td>";
-            echo "<td>" . htmlspecialchars($user['cafe']) . "</td>";
-            echo "<td>" . htmlspecialchars($user['almoco']) . "</td>";
-            echo "<td>" . htmlspecialchars($user['janta']) . "</td>";
+            echo "<td>" . "<input align=\"center\" type=checkbox>" . "</td>";
+            echo "<td>" . "<input align=\"center\" type=checkbox>" . "</td>";
+            echo "<td>" . "<input align=\"center\" type=checkbox>" . "</td>";
             echo "</tr>";
 
         }
@@ -113,7 +91,10 @@ echo '<h2>Usuários Arranchados</h2>';
     } catch (PDOException $e) {
         echo "<strong>ERRO:</strong> " . htmlspecialchars($e->getMessage());
     }
+//LEMBRETE:
+//INSERT INTO arranchados (user_id,data_refeicao, refeicao) VALUES (6,$date->date_format('Y-m-d') ,'cafe');
 
-
+echo "</body>
+</html>";
 
 ?>

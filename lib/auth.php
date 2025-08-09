@@ -20,7 +20,7 @@ if (empty($_POST['usuario']) || empty($_POST['senha'])) {
     header("Location: ../index.php");
 }
 // Caso o usuário já esteja logado e não é admin, redireciona para a dashboard
-require_once '../lib/DbConnection.php';
+require_once '../database/DbConnection.php';
 $pdo = DbConnection();
 if ($pdo === null) {
     $_SESSION["erro"] = "Erro na conexão com o banco de dados";
@@ -59,11 +59,11 @@ if (password_verify($userpass, $user['password'])) {
         switch ($user['role']) {
             case 'admin':
                 $_SESSION["admin"] = true;
-                $redirect = '../config/admin.php';
+                $redirect = '../config/admin/admin.php';
                 break;
             case 'furriel':
                 $_SESSION["furriel"] = true;
-                $redirect = '../config/furriel.php';
+                $redirect = '../config/furriel/furriel.php';
                 break;
             case 'comum':
                 $_SESSION["comum"] = true;

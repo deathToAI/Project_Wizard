@@ -25,7 +25,7 @@ if (empty($_SESSION['auth_data']['role']) || $_SESSION['auth_data']['role'] !== 
 }
 
 // Inclui os arquivos necessários
-require_once __DIR__ . '/../lib/DbConnection.php';
+require_once __DIR__ . '/../../database/DbConnection.php';
 
 // // CSRF Token
 if (empty($_SESSION['token'])) {
