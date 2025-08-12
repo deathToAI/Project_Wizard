@@ -69,7 +69,7 @@ echo '<h2>Usuários Arranchados</h2>';
         echo "</select>";
        
         echo "<table id=\"tabela\" align='center' width='80%' border='1'>
-            <tr>
+
                 <tr>
                     <th id=\"diaselecionado\" colspan=\"4\" align=\"center\">  </th> 
                      
@@ -79,12 +79,12 @@ echo '<h2>Usuários Arranchados</h2>';
                 <th align=\"center\">Cafe</th>
                 <th align=\"center\">Almoço</th>
                 <th align=\"center\">Janta</th>
-        </tr>       
+     
             </tr>";
         //Recuperar as datas de refeições daquele usuario e marcar as checkbox nas datas que estiverem arranchados
 
         foreach ($users as $user) {
-            echo "<tr data-user-id=\"" . $user['id'] . "\"  >";
+            echo "<tr class=\"user-row\" data-id=\"" . $user['id'] . "\">";
             
             echo "<td align=\"center\">" . htmlspecialchars($user['nome_pg']) . "</td>";
             echo "<td align=\"center\">" . "<input class=\"ck\" type=checkbox data-refeicao=\"cafe\" >" . "</td>";
