@@ -33,6 +33,35 @@ document.addEventListener('DOMContentLoaded', function() {
             parseInt(dateParts[1]) - 1,
             parseInt(dateParts[2])
         );
+        // Pegar data do BD
+        console.log(`Fetching ${dateValue}`);
+        fetch(`retrieve.php?date=${dateValue}`)
+        //Ler o campo 'data-user-id' da linha 
+
+        //Recuperar informação daquele usuário para a data selecionada
+        // Marcar as checkbox de acordo com jsonData[$i].refeicao
+        .then(response => response.text())
+        // 
+        .then(data => {
+            const jsonData = JSON.parse(data);
+            jsonData.forEach(e => {
+                console.log(jsonData[0].refeicao);
+            })
+            const tabela = document.getElementById('tabela') // Define a tabela
+            const tam_tabela = tabela.rows.length; // Define as colunas da tabela
+            for (let i = 1; i < tam_tabela; i++) { //Itera pela tabela 
+                var cell = tabela.rows.item(i).cells; // Verifica quantas celulas tem em cada linha
+                var tam_cell = cell.length; 
+                for (let j = 0; j < tam_cell; j++) { // Itera pela quantidade de células
+                    // Verifica 
+                    if (cell.item(j).getAttribute('data-user-id') == jsonData[e].user_id) {
+                        cell.item(j).setAttribute('data-refeicao', jsonData[e].refeicao);
+                    }
+                }
+                
+            }
+            document.getElementById('resposta_bd').innerHTML =  `Arranchados para: ${jsonData[0].refeicao}  <br> User_ID: ${jsonData[0].user_id} <br> ${data}`;
+        });
         
         document.getElementById('diaselecionado').innerHTML = 'Data: ' + formatter.format(date);
     }

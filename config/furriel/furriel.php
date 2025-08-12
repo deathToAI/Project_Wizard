@@ -27,6 +27,7 @@ $formatter = new IntlDateFormatter(
     'America/Sao_Paulo',         // Fuso horário
     IntlDateFormatter::GREGORIAN // Calendário
 );
+//Array com datas
 $interval = new DateInterval('P1D'); // Intervalo de 1 dia
 $dates = new DatePeriod(
     $start, // Data de início
@@ -49,10 +50,15 @@ echo '<h2>Usuários Arranchados</h2>';
             echo "<strong>ERRO:</strong> Não foi possível conectar ao banco de dados.";
             exit();
         }
+        //Array com usuarios
         $stmt = $pdo->query("SELECT id, username, nome_pg, role, grupo FROM users");
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo "<Selecione a data>
-        <select name=\"dia\" id=\"dia\" onchange=\"updateDateHeader(this.value)\">";
+        //Array com refeições
+        $stmt_arranchados = $pdo->query("SELECT user_id, data_refeicao, refeicao FROM arranchados");
+        $arranchados= $stmt_arranchados->fetchAll(PDO::FETCH_ASSOC);
+ 
+        echo "Selecione a data:<br>
+        <select name=\"dia\" id=\"dia\" >";
         foreach($dates as $index => $date){
             if($index == 0){
                 echo "<option value=\"" . $date->format('Y-m-d') . "\" selected>" . $formatter->format($date) . "</option>";
@@ -62,7 +68,7 @@ echo '<h2>Usuários Arranchados</h2>';
         }
         echo "</select>";
        
-        echo "<table align='center' width='80%' border='1'>
+        echo "<table id=\"tabela\" align='center' width='80%' border='1'>
             <tr>
                 <tr>
                     <th id=\"diaselecionado\" colspan=\"4\" align=\"center\">  </th> 
@@ -76,14 +82,14 @@ echo '<h2>Usuários Arranchados</h2>';
         </tr>       
             </tr>";
         //Recuperar as datas de refeições daquele usuario e marcar as checkbox nas datas que estiverem arranchados
-        
+
         foreach ($users as $user) {
-            echo "<tr>";
+            echo "<tr data-user-id=\"" . $user['id'] . "\"  >";
             
-            echo "<td>" . htmlspecialchars($user['nome_pg']) . "</td>";
-            echo "<td>" . "<input align=\"center\" type=checkbox>" . "</td>";
-            echo "<td>" . "<input align=\"center\" type=checkbox>" . "</td>";
-            echo "<td>" . "<input align=\"center\" type=checkbox>" . "</td>";
+            echo "<td align=\"center\">" . htmlspecialchars($user['nome_pg']) . "</td>";
+            echo "<td align=\"center\">" . "<input class=\"ck\" type=checkbox data-refeicao=\"cafe\" >" . "</td>";
+            echo "<td align=\"center\">" . "<input class=\"ck\" type=checkbox data-refeicao=\"almoco\" >" . "</td>";
+            echo "<td align=\"center\">" . "<input class=\"ck\" type=checkbox data-refeicao=\"janta\" >" . "</td>";
             echo "</tr>";
 
         }
@@ -93,6 +99,8 @@ echo '<h2>Usuários Arranchados</h2>';
     }
 //LEMBRETE:
 //INSERT INTO arranchados (user_id,data_refeicao, refeicao) VALUES (6,$date->date_format('Y-m-d') ,'cafe');
+
+echo "<br><a>Resposta BD: </a> <br> <a id=\"resposta_bd\"> </a> ";
 
 echo "</body>
 </html>";
