@@ -1,5 +1,7 @@
 # Projeto de Painel de Administração e Dashboard
 =====================================================
+## Roadmap:
+* https://docs.google.com/spreadsheets/d/1nNVjMLiaZzlBBnzNdOK1eiQBXr0aMlWOKUVHlOuQRu0/edit?usp=drive_link
 
 ## Visão Geral
 ---------------
