@@ -39,7 +39,7 @@ echo "<!DOCTYPE html><br>
 <html>
 <head>
 <body>";
-echo "<script src=\"furriel.js\" defer> </script>";
+echo "<script src=\"furriel.js\" > </script>";
 
 echo "Data: ". $today   . "<br> Hora: <a id=\"relogio\">--:--:--</a>" ;
 
@@ -56,7 +56,8 @@ echo '<h2>Usuários Arranchados</h2>';
         //Array com refeições
         $stmt_arranchados = $pdo->query("SELECT user_id, data_refeicao, refeicao FROM arranchados");
         $arranchados= $stmt_arranchados->fetchAll(PDO::FETCH_ASSOC);
- 
+        echo "<form>";
+        echo "<div>";
         echo "Selecione a data:<br>
         <select name=\"dia\" id=\"dia\" >";
         foreach($dates as $index => $date){
@@ -94,13 +95,14 @@ echo '<h2>Usuários Arranchados</h2>';
 
         }
         echo "</table>";
+        echo "<br><button align=\"center\" id=\"btn_enviar\" type=\"button\" >Enviar</button>"; // Botao de save
+        echo "</form>";
+        echo "</div>";
     } catch (PDOException $e) {
         echo "<strong>ERRO:</strong> " . htmlspecialchars($e->getMessage());
     }
-//LEMBRETE:
-//INSERT INTO arranchados (user_id,data_refeicao, refeicao) VALUES (6,$date->date_format('Y-m-d') ,'cafe');
+echo "<p id=\"resposta_bd\"></p>";
 
-echo "<br><a>Resposta BD: </a> <br> <a id=\"resposta_bd\"> </a> ";
 
 echo "</body>
 </html>";
