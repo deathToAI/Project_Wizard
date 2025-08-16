@@ -46,20 +46,25 @@ document.addEventListener('DOMContentLoaded', function() {
             const tabela = document.getElementById('tabela'); // Obtém a tabela com o ID "tabela" do documento HTML
             const tam_tabela = tabela.rows.length; // Obtém o número de linhas da tabela
 
+
             for (let i = 2; i < tam_tabela; i++) { // Itera pelas linhas da tabela, começando da terceira linha (índice 2)
-            const linha = tabela.rows.item(i);// Obtém as células da linha atual
-            const id = linha.getAttribute('data-id');// Obtém o ID da linha atual
-            // console.log(`ID da linha: ${id}`);// Mostra o ID da linha no console(depuração)
+                const linha = tabela.rows.item(i);// Obtém as células da linha atual
+                const id = linha.getAttribute('data-id');// Obtém o ID da linha atual
+                // console.log(`ID da linha: ${id}`);// Mostra o ID da linha no console(depuração)
+                const checkboxes = linha.querySelectorAll('.ck');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });// Desmarca todos os checkboxes na linha atual
 
-            jsonData.forEach(element => { // Itera pelos elementos do array "jsonData"
-                // console.log(element.user_id, element.refeicao); // Mostra o ID do usuário e o tipo de refeição no console
-                if (String(element.user_id) === String(id)) {    // Verifica se o ID do usuário corresponde ao ID da linha atual
-                const refeicao = element.refeicao;  // Obtém o tipo de refeição do usuário
-                const checkbox = linha.querySelector(`.ck[data-refeicao="${refeicao}"]`);// Seleciona o checkbox correspondente à refeição na linha atual
-                if (checkbox) checkbox.checked = true;// Se o checkbox existir, marca-o como selecionado
+                jsonData.forEach(element => { // Itera pelos elementos do array "jsonData"
+                    // console.log(element.user_id, element.refeicao); // Mostra o ID do usuário e o tipo de refeição no console
+                    if (String(element.user_id) === String(id)) {    // Verifica se o ID do usuário corresponde ao ID da linha atual
+                        const refeicao = element.refeicao;  // Obtém o tipo de refeição do usuário
+                        const checkbox = linha.querySelector(`.ck[data-refeicao="${refeicao}"]`);// Seleciona o checkbox correspondente à refeição na linha atual
+                        if (checkbox) checkbox.checked = true ;// Se o checkbox existir, marca-o como selecionado
 
-                }
-            });
+                    }
+                });         
             }
         } catch (error) {
             console.error('Error parsing JSON data:', error);
@@ -92,13 +97,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
             //Envio de dados para o servidor
             console.log(`Refeições a serem salvas: ${JSON.stringify(refeicoes)}`); // Depuração: mostra o array de refeições no console
- 
+            
           //  Envia os dados para o servidor
-            console.log("Fetching...");
+            const payload = JSON.stringify(refeicoes);      // pode ser "[]"
+            const corpo = `dia=${encodeURIComponent(dia)}&payload=${encodeURIComponent(payload)}`;
+
             fetch('http://localhost:3333/config/furriel/update.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `payload=${encodeURIComponent(JSON.stringify(refeicoes))}`
+            body: corpo
             })
             .then(r => r.json())
             .then(({ status, message }) => {
@@ -117,6 +124,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    const tudoCafe = document.getElementById('tudoCafe');
+    const tudoAlmoco = document.getElementById('tudoAlmoco');
+    const tudoJanta = document.getElementById('tudoJanta');
+    
+    tudoCafe.addEventListener('change',   e => setAll('cafe',   e.target.checked));
+    tudoAlmoco.addEventListener('change', e => setAll('almoco', e.target.checked));
+    tudoJanta.addEventListener('change',  e => setAll('janta',  e.target.checked));
+    
+
+    function setAll(refeicao, checked) {
+    const tabela = document.getElementById('tabela');
+    if (!tabela) return;
+
+    const checkboxes = tabela.querySelectorAll(`.ck[data-refeicao="${refeicao}"]`);
+    checkboxes.forEach(cb => { cb.checked = checked; });
+    }
+        
+    
     // Inicialização
     var selectElement = document.getElementById('dia');
     if(selectElement) {

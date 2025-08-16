@@ -84,3 +84,88 @@
     margin-left: 10px;
     
 }
+/* Estilo Switch Furriel*/ 
+
+/* O container do switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  margin-right: 12px; /* espaço horizontal entre switches */
+  margin-bottom: 8px; /* espaço vertical (se quebrar linha) */
+  vertical-align: middle; /* alinha com o texto */
+}
+
+.switch + .switch {
+  margin-left: 20px; /* aumenta a distância entre os switches */
+}
+
+/* Esconde o checkbox padrão */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* A "trilha" do switch */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+
+/* O botão que desliza */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;   /* antes: 26px */
+  width: 16px;    /* antes: 26px */
+  left: 2px;      /* antes: 4px */
+  bottom: 2px;    /* antes: 4px */
+  background-color: white;
+  transition: .4s;
+}
+
+/* Estado ligado */
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px); /* ajustado: largura total (40) - botão (16) - margens (2+2) = 20px */
+}
+
+/* Borda arredondada */
+.slider.round {
+  border-radius: 20px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+label.switch {
+  margin-right: 20px;  /* espaço entre cada label (switch + texto) */
+}
+
+#seltudo {
+  display: flex;
+  width:30%;
+  justify-content: space-around; /* distribui igualmente */
+  align-items: center;
+  margin-top: 10px;
+}
+
+.switch-container {
+  text-align: center; /* texto embaixo do switch */
+}

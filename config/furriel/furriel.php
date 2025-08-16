@@ -38,6 +38,8 @@ $today = $formatter->format($start);
 echo "<!DOCTYPE html><br>
 <html>
 <head>
+    <link rel=\"stylesheet\" href=\"../../public/css/styles.css\">
+</head>
 <body>";
 echo "<script src=\"furriel.js\" > </script>";
 
@@ -57,8 +59,10 @@ echo '<h2>Usuários Arranchados</h2>';
         $stmt_arranchados = $pdo->query("SELECT user_id, data_refeicao, refeicao FROM arranchados");
         $arranchados= $stmt_arranchados->fetchAll(PDO::FETCH_ASSOC);
         echo "<form>";
-        echo "<div>";
+        echo "<div align='center' id=\"formulario\">";
         echo "Selecione a data:<br>
+
+        
         <select name=\"dia\" id=\"dia\" >";
         foreach($dates as $index => $date){
             if($index == 0){
@@ -68,7 +72,33 @@ echo '<h2>Usuários Arranchados</h2>';
             }
         }
         echo "</select>";
-       
+        echo "
+            <div id='seltudo'>
+            <div class='switch-container'>
+                <label class='switch'>
+                <input type='checkbox' id='tudoCafe'>
+                <span class='slider round'></span>
+                </label>
+                <div>Todos: Café</div>
+            </div>
+
+            <div class='switch-container'>
+                <label class='switch'>
+                <input type='checkbox' id='tudoAlmoco' onClick=\"selectAll('almoco')\"'>
+                <span class='slider round'></span>
+                </label>
+                <div>Todos: Almoço</div>
+            </div>
+
+            <div class='switch-container'>
+                <label class='switch'>
+                <input type='checkbox' id='tudoJanta'>
+                <span class='slider round'></span>
+                </label>
+                <div>Todos: Janta</div>
+            </div>
+            </div>";
+ 
         echo "<table id=\"tabela\" align='center' width='80%' border='1'>
 
                 <tr>

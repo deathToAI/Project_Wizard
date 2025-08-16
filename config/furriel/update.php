@@ -10,6 +10,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     require_once __DIR__ . '/../../database/DbConnection.php';
     $selecao = json_decode($_POST['payload'] ?? '', true);
+    $dia = $_POST['dia'] ?? null;
+    if (!is_array($selecao)) $selecao = []; // trata JSON inválido
+
     try {
         $pdo = DbConnection();
         if ($pdo === null) {
@@ -18,7 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         //limpa a tabela antes  de salvar
         $sqldel = $pdo->prepare('DELETE FROM arranchados WHERE data_refeicao = :dia');
-        $sqldel->execute([':dia'=>$selecao[0]['data_refeicao']]);
+        $sqldel->execute([':dia' => $dia]);
+        // Prepara a consulta para inserir ou atualizar os dados
         $stmt = $pdo->prepare(  'INSERT INTO arranchados (user_id, data_refeicao, refeicao)
             VALUES (:user_id, :data_refeicao, :refeicao)
             ON CONFLICT(user_id, data_refeicao, refeicao) DO NOTHING'
