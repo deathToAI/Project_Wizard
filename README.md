@@ -7,7 +7,7 @@ A ideia é que seja simples de implementar ao seguir a documentação, sendo exe
 O software é de código aberto para utilização por qualquer pessoa que, veja nele, alguma utilidade prática.
 
 Roadmap no link:
-[https://docs.google.com/spreadsheets/d/1z5NmnJATzEPpEQPOHimKT3pm-_SJkcGASERZba-VgAQ/edit?gid=0#gid=0](https://docs.google.com/spreadsheets/d/1z5NmnJATzEPpEQPOHimKT3pm-_SJkcGASERZba-VgAQ/edit?gid=0#gid=0)
+[[https://docs.google.com/spreadsheets/d/1z5NmnJATzEPpEQPOHimKT3pm-_SJkcGASERZba-VgAQ/edit?gid=0#gid=0](https://docs.google.com/spreadsheets/d/1nNVjMLiaZzlBBnzNdOK1eiQBXr0aMlWOKUVHlOuQRu0/edit?gid=0#gid=0)]([https://docs.google.com/spreadsheets/d/1z5NmnJATzEPpEQPOHimKT3pm-_SJkcGASERZba-VgAQ/edit?gid=0#gid=0](https://docs.google.com/spreadsheets/d/1nNVjMLiaZzlBBnzNdOK1eiQBXr0aMlWOKUVHlOuQRu0/edit?gid=0#gid=0))
 
 O projeto não tem nenhuma finalidade comercial ou lucro de qualquer natureza por parte do(s) desenvolvedor(es) e colaborador(es).
 
@@ -16,15 +16,16 @@ O projeto não tem nenhuma finalidade comercial ou lucro de qualquer natureza po
 
 ```sh
 cat /etc/issue
-Linux Mint 22 Wilma \n \l
-node -v
-v18.19.1
+#Ubuntu 24.04.2 LTS \n \l
+
+uname -a
+#Linux factory 6.14.0-27-generic #27~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue Jul 22 17:38:49 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
+
+php -v
+#PHP 8.3.6 (cli) (built: Jul 14 2025 18:30:55) (NTS)
 ```
 
-```sh
-uname -a
-Linux factory 6.8.0-38-generic #38-Ubuntu SMP PREEMPT_DYNAMIC Fri Jun  7 15:25:01 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux
-```
+
 
 ##  Tecnologias Utilizadas
 - **Backend**: PHP 
