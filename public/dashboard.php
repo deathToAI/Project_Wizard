@@ -25,6 +25,7 @@
         });
 
 </script>
+<script src="dashboard.js" defer> </script>
 </head>
 <?php
 date_default_timezone_set('America/Sao_Paulo');
@@ -82,9 +83,9 @@ $dates = new DatePeriod(
         Carregando relógio...
     </div>
     <a class="logout" href="../lib/logout.php" > Sair </a> <br>
-
+    <div id="selecao" width="80%">
     <h3 align="center">Selecione as datas de arranchamento abaixo: </h3>
-    <form name="refeicoes" action="dashboard.php" method="post">
+    <form name="refeicoes" action="user_update.php" method="post">
     <table id="tabela" align="center" width="50%" border="1">
         <tr>
             <th align="center">Data</th>
@@ -106,8 +107,9 @@ $dates = new DatePeriod(
         }  
          ?>
     </table>
-      <input type="submit" value="Enviar">
-    </form>  
+      <input class="btn_enviar" align="center" type="submit" value="Enviar">
+    </form> 
+    </div> 
 </body>
 </html>
 
