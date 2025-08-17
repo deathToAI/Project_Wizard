@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Conexão PDO
-require_once __DIR__ . '/../lib/DbConnection.php';
+require_once __DIR__ . '/../../database/DbConnection.php';
 $pdo = DbConnection(); 
 
 if ($pdo === null) {

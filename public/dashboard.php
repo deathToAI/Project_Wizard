@@ -29,15 +29,18 @@
 <?php
 date_default_timezone_set('America/Sao_Paulo');
 setlocale(LC_TIME, 'pt_BR.UTF-8');
-
-session_start();
-if (!isset($_SESSION["usuario"]) || !isset($_SESSION["senha"])) {
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+if (!isset($_SESSION["auth_data"]['nome_pg']) || empty($_SESSION["auth_data"]['nome_pg'])) {
+    $_SESSION["erro"] = "Usuario ou senha nao informados";
     header("Location: ../index.php");
     exit();
 }  
 else {
-    $usuario = $_SESSION["usuario"];
-    echo "<h1>Bem vindo ao sistema, $usuario</h1>";
+    $usuario = $_SESSION["auth_data"]['nome_pg'];
+    echo "<h1 id=\"idusuario\" data-id=\"".$_SESSION["auth_data"]['id']. "\">Bem vindo ao sistema, $usuario</h1>";
+
     echo "<title>$usuario Dashboard</title>";
 }
 
@@ -73,14 +76,16 @@ $dates = new DatePeriod(
 
 <body>
     <h2>Arranchamento</h2>
-    <p>Selecione as datas de arranchamento abaixo: </p>
+    <?php echo "Hoje é ".$formatter->format($momento); ?>
     <div id="relogio">
         <!-- A hora será exibida aqui -->
         Carregando relógio...
     </div>
-    <a class="logout" href="logout.php" > Sair </a> <br>
+    <a class="logout" href="../lib/logout.php" > Sair </a> <br>
+
+    <h3 align="center">Selecione as datas de arranchamento abaixo: </h3>
     <form name="refeicoes" action="dashboard.php" method="post">
-    <table border="1">
+    <table id="tabela" align="center" width="50%" border="1">
         <tr>
             <th align="center">Data</th>
             <th align="center">Cafe</th>
@@ -92,10 +97,10 @@ $dates = new DatePeriod(
         foreach ($dates as $index => $d) {
             
             echo "<tr>";
-            echo  '<td align="center">'.   $formatter->format($d) . "</td>";   
-            echo  '<td align="center">'. '<input name="cafe['.$d->format('Y-m-d').']"  value="1" type="checkbox">'.    "</td>";
-            echo  '<td align="center">'. '<input name="almoco['.$d->format('Y-m-d').']" value="1" type="checkbox">'.    "</td>"; 
-            echo  '<td align="center">'. '<input name="janta['.$d->format('Y-m-d').']" value="1" type="checkbox">'.    "</td>"; 
+            echo  '<td id="dia" align="center" value="'.$d->format('Y-m-d').' ">'.   $formatter->format($d) . "</td>";   
+            echo  '<td align="center">'. '<input name="cafe['.$d->format('Y-m-d').']"   type="checkbox">'.    "</td>";
+            echo  '<td align="center">'. '<input name="almoco['.$d->format('Y-m-d').']"  type="checkbox">'.    "</td>"; 
+            echo  '<td align="center">'. '<input name="janta['.$d->format('Y-m-d').']"  type="checkbox">'.    "</td>"; 
             echo "</tr>";
 
         }  
@@ -109,31 +114,6 @@ $dates = new DatePeriod(
 <?php 
 //DEPURANDO AQUI
 echo "<h1>Área de testes</h1>";
-
-// echo "<table border='1'>";
-// echo "<tr><th>Data</th><th>Café</th><th>Almoço</th><th>Janta</th></tr>";
-
-// foreach ($dates as $index => $d) {
-//     $dataDB = $d->format('Y-m-d'); // Formata a data para o padrão do banco de dados
-//     $date = $formatter->format($d); // Formata a data para exibição
-//     echo "<tr>";
-//     echo "<td>dataBD: $dataDB data frontend: $date </td>";
-    
-//     // Verifica se o café foi marcado
-//     $cafeMarcado = isset($_POST['cafe'[$dataDB]]) ? 'Sim' : 'Não';
-//     echo "<td>$cafeMarcado</td>";
-    
-//     // Verifica se o almoço foi marcado
-//     $almocoMarcado = isset($_POST['almoco'][$dataDB]) ? 'Sim' : 'Não';
-//     echo "<td>$almocoMarcado</td>";
-    
-//     // Verifica se a janta foi marcada
-//     $jantaMarcada = isset($_POST['janta'][$dataDB]) ? 'Sim' : 'Não';
-//     echo "<td>$jantaMarcada</td>";
-    
-//     echo "</tr>";
-// }
-// echo "</table>";
 
 echo "$usuario arranchado para:<br>";
 echo "<ul>";

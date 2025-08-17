@@ -11,7 +11,7 @@ https://docs.google.com/spreadsheets/d/1nNVjMLiaZzlBBnzNdOK1eiQBXr0aMlWOKUVHlOuQ
 
 O projeto não tem nenhuma finalidade comercial ou lucro de qualquer natureza por parte do(s) desenvolvedor(es) e colaborador(es).
 
-**Desenvolvido para facilitar o gerenciamento de arranchamento e diminuir a dependência de sistemas arcaicos dependentes unicamente de input humano e de infindáveis resmas de papel!**
+**Desenvolvido para facilitar o gerenciamento de arranchamento e diminuir a dependência de sistemas arcaicos dependentes unicamente de *input* humano e de infindáveis resmas de papel!**
 
 
 ```sh

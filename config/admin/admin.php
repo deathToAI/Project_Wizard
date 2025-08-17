@@ -20,7 +20,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 // 2. Verifica se há dados de autenticação
 if (empty($_SESSION['auth_data']['role']) || $_SESSION['auth_data']['role'] !== 'admin') {
         $_SESSION["erro"] = "Acesso negado. Você não tem permissão para acessar esta página.";
-        header("Location:../index.php");
+        header("Location:../../index.php");
         exit();
 }
 
@@ -83,6 +83,7 @@ function listUsers(){
     <?php
     echo "<h1>Bem vindo,". htmlspecialchars($_SESSION['auth_data']['nome_pg']).",ao painel de Admin</h1>";
      ?>
+    <a class="logout" href="../../lib/logout.php" > Sair </a> <br>
     <h2>Gerenciamento de usuários</h2>
     <?php if ($feedback_message): ?>
         <div class="feedback <?php echo $feedback_type; ?>">

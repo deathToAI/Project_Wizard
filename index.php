@@ -11,13 +11,14 @@ if (empty($_SESSION["token"])) {
 $erro = '';
 if (isset($_SESSION["erro"])) {
     $erro = $_SESSION["erro"];
+    echo "$_SESSION[erro]";
     unset($_SESSION["erro"]); // Limpa o erro após exibir
 }
 ?>
 
 <h1>Bem vindo ao sistema </h1>
 <form action="lib/auth.php" method="POST"> 
-
+    
 <label for="usuario">Usuario</label>
 <input type="text" name="usuario" placeholder="sgtfulano"><br>
 
@@ -33,5 +34,12 @@ if (isset($_SESSION["erro"])) {
 
 </form>
 
+
+<?php 
+echo "Teste de sistema: <br>" ;
+echo "token: $_SESSION[token]";
+echo "<br>Role: " . (isset($_SESSION['auth_data']['role']) ? $_SESSION['auth_data']['role'] : 'não autenticado') . "<br>";
+
+?>
 </body>
 </html>

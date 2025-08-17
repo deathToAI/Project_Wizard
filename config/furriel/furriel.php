@@ -1,19 +1,22 @@
 <?php 
 //config/furriel/furriel.php
 
-// //Verifica se há dados de autenticação
-// if (empty($_SESSION['auth_data']['role']) || $_SESSION['auth_data']['role'] !== 'furriel') {
-//         $_SESSION["erro"] = "Acesso negado. Você não tem permissão para acessar esta página.";
-//         header("Location:../index.php");
-//         exit();
-// }
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+//Verifica se há dados de autenticação
+if (empty($_SESSION['auth_data']['role']) || $_SESSION['auth_data']['role'] !== 'furriel') {
+        $_SESSION["erro"] = "Acesso negado. Você não tem permissão para acessar esta página.";
+        header("Location:../../index.php");
+        exit();
+}
 
 // Inclui os arquivos necessários
 require_once __DIR__ . '/../../database/DbConnection.php';
 
-// if (empty($_SESSION['token'])) {
-//     $_SESSION['token'] = bin2hex(random_bytes(32));
-// }
+if (empty($_SESSION['token'])) {
+    $_SESSION['token'] = bin2hex(random_bytes(32));
+}
 
 // Definir periodo de datas
 $start = new DateTime('now');
@@ -44,7 +47,7 @@ echo "<!DOCTYPE html><br>
 echo "<script src=\"furriel.js\" > </script>";
 
 echo "Data: ". $today   . "<br> Hora: <a id=\"relogio\">--:--:--</a>" ;
-
+echo "<a class=\"logout\" href=\"../../lib/logout.php\" > Sair </a> <br>";
 echo '<h2>Usuários Arranchados</h2>';
     try {
         $pdo = DbConnection();
@@ -84,7 +87,7 @@ echo '<h2>Usuários Arranchados</h2>';
 
             <div class='switch-container'>
                 <label class='switch'>
-                <input type='checkbox' id='tudoAlmoco' onClick=\"selectAll('almoco')\"'>
+                <input type='checkbox' id='tudoAlmoco'>
                 <span class='slider round'></span>
                 </label>
                 <div>Todos: Almoço</div>

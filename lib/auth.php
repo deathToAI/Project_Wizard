@@ -68,11 +68,10 @@ if (password_verify($userpass, $user['password'])) {
             case 'comum':
                 $_SESSION["comum"] = true;
                 $redirect = '../public/dashboard.php';
-
                 break;
         }
         header("Location: " . $redirect);
-        exit();
+        die();
         
     }else {
         $_SESSION["erro"] = "Senha incorreta";
