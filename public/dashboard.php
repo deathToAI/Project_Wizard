@@ -97,10 +97,10 @@ $dates = new DatePeriod(
         foreach ($dates as $index => $d) {
             
             echo "<tr>";
-            echo  '<td id="dia" align="center" value="'.$d->format('Y-m-d').' ">'.   $formatter->format($d) . "</td>";   
-            echo  '<td align="center">'. '<input name="cafe['.$d->format('Y-m-d').']"   type="checkbox">'.    "</td>";
-            echo  '<td align="center">'. '<input name="almoco['.$d->format('Y-m-d').']"  type="checkbox">'.    "</td>"; 
-            echo  '<td align="center">'. '<input name="janta['.$d->format('Y-m-d').']"  type="checkbox">'.    "</td>"; 
+            echo  '<td id="dia" class="dia" align="center" value="'.$d->format('Y-m-d').'">'.   $formatter->format($d) . "</td>";   
+            echo  '<td align="center">'. '<input name="cafe" value="'.$d->format('Y-m-d').'"   type="checkbox">'.    "</td>";
+            echo  '<td align="center">'. '<input name="almoco" value ="'.$d->format('Y-m-d').'"  type="checkbox">'.    "</td>"; 
+            echo  '<td align="center">'. '<input name="janta" value ="'.$d->format('Y-m-d').'"  type="checkbox">'.    "</td>"; 
             echo "</tr>";
 
         }  
