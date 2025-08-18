@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     enviar = document.getElementById('enviar');
-    function saveTable(){
+    function saveUserTable(){
         const tabela = document.getElementById('tabela');
         const idUsuario = document.getElementById('idusuario').dataset.id;
         const linhas = tabela.rows;
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }//fim for j
         }//fim for i
         dados['id'] = idUsuario; // Adiciona o ID do usuário aos dados
-        console.log("Função savetable enviará JSON:" + JSON.stringify(dados));
+        console.log("Função saveUserTable enviará JSON:" + JSON.stringify(dados));
 
         fetch('user_update.php', {
         method: 'POST',
@@ -128,11 +128,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
        
 
-    }//fim de saveTable
+    }//fim de saveUserTable
 
     enviar.addEventListener('click', (e) => {
         e.preventDefault(); // Evita que o formulário seja submetido normalmente
-    saveTable();
+    saveUserTable();
     });
     
     updateSelections(); // Chama a função para atualizar as seleções ao carregar a página

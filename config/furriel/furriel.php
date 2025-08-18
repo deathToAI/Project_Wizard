@@ -39,16 +39,8 @@ $dates = new DatePeriod(
     $end // Data de fim
 );
 $today = $formatter->format($start);
-echo "<!DOCTYPE html><br>
-<html>
-<head>
-    <link rel=\"stylesheet\" href=\"../../public/css/styles.css\">
-</head>
-<body>";
-echo "<script src=\"furriel.js\" > </script>";
 
-echo "Data: ". $today   . "<br> Hora: <a id=\"relogio\">--:--:--</a>" ;
-echo "<a class=\"logout\" href=\"../../lib/logout.php\" > Sair </a> <br>";
+echo "Data: ". $today;
 echo '<h2>Usuários Arranchados</h2>';
     try {
         $pdo = DbConnection();
@@ -138,7 +130,5 @@ echo '<h2>Usuários Arranchados</h2>';
 echo "<p id=\"resposta_bd\"></p>";
 
 
-echo "</body>
-</html>";
 include __DIR__ . '/../../lib/footer.php';
 ?>

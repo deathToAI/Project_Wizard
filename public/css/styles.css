@@ -1,4 +1,108 @@
 
+/* Estilos Gerais e Básicos */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5; /* Um cinza bem claro para o fundo */
+    color: #333; /* Cor de texto principal (cinza escuro) */
+    margin: 0;
+    padding: 20px;
+    line-height: 1.5; /* Melhora a legibilidade do texto */
+}
+
+p {
+    margin-bottom: 1em; /* Espaçamento abaixo dos parágrafos */
+}
+
+a {
+    color: #1877f2; /* Um azul moderno e amigável */
+    text-decoration: none; /* Remove o sublinhado padrão */
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #125abd; /* Escurece o azul ao passar o mouse */
+    text-decoration: underline; /* Adiciona o sublinhado no hover */
+}
+
+/* Estilização de Tabelas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1em;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.10);
+    border-radius: 8px;
+    overflow: hidden; /* Garante que o border-radius seja aplicado nos cantos */
+}
+
+table th, table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table th {
+    background-color: #009879; /* Um verde elegante para o cabeçalho */
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* --- Navegação --- */
+header {
+    background-color: #ffffff;
+    padding: 0 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: -20px -20px 20px -20px; /* Remove o espaçamento do body e adiciona embaixo */
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Alinha o logo à esquerda e o menu à direita */
+    align-items: center;
+    height: 60px;
+    max-width: 1200px; /* Limita a largura em telas grandes */
+    margin: 0 auto; /* Centraliza a navbar */
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 25px; /* Espaço entre o menu e o relógio */
+}
+
+#relogio {
+    font-weight: bold;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.navbar .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+}
+
+.navbar .menu {
+    list-style: none; /* Remove os pontos da lista */
+    margin: 0;
+    padding: 0;
+    display: flex; /* Coloca os itens lado a lado */
+}
+
+.navbar .menu li a {
+    display: block;
+    padding: 20px 15px; /* Aumenta a área de clique */
+    color: #555;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.navbar .menu li a:hover {
+    background-color: #f0f2f5; /* Cor de fundo suave no hover */
+    color: #1877f2; /* Cor principal do link no hover */
+    text-decoration: none; /* Garante que não haja sublinhado */
+}
+
 /* Styles.css */
 
 .button {

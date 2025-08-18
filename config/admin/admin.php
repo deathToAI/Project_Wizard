@@ -8,8 +8,8 @@ echo '<!DOCTYPE html>
     <meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\' \'unsafe-inline\'; style-src \'self\' \'unsafe-inline\';">
     <title>Painel Admin</title>
     <link rel="stylesheet" href="/public/css/styles.css" onload="this.media=\'all\'">
-    <noscript><link rel="stylesheet" href="public/css/styles.css"></noscript>
-    <script src="admin.js" ></script>
+    <noscript><link rel="stylesheet" href="/public/css/styles.css"></noscript>
+    <script src="/lib/scripts.js" defer></script>
     <link href="../../public/css/styles.css" rel="stylesheet" type="text/css">
     <link rel="icon" href="data:,">
 </head>';
