@@ -10,7 +10,8 @@ if (empty($_SESSION['auth_data']['role']) || $_SESSION['auth_data']['role'] !== 
         header("Location:../../index.php");
         exit();
 }
-
+//Insere o cabbeçalho
+include __DIR__ . '/../../lib/header.php';
 // Inclui os arquivos necessários
 require_once __DIR__ . '/../../database/DbConnection.php';
 
@@ -139,5 +140,5 @@ echo "<p id=\"resposta_bd\"></p>";
 
 echo "</body>
 </html>";
-
+include __DIR__ . '/../../lib/footer.php';
 ?>

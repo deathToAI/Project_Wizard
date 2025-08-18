@@ -26,6 +26,7 @@
 
 </script>
 <script src="dashboard.js" defer> </script>
+<link href="css/styles.css" rel="stylesheet" type="text/css">
 </head>
 <?php
 date_default_timezone_set('America/Sao_Paulo');

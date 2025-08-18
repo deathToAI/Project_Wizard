@@ -10,6 +10,7 @@ echo '<!DOCTYPE html>
     <link rel="stylesheet" href="/public/css/styles.css" onload="this.media=\'all\'">
     <noscript><link rel="stylesheet" href="public/css/styles.css"></noscript>
     <script src="admin.js" ></script>
+    <link href="../../public/css/styles.css" rel="stylesheet" type="text/css">
     <link rel="icon" href="data:,">
 </head>';
 if (session_status() !== PHP_SESSION_ACTIVE) {
