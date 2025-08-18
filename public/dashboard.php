@@ -40,6 +40,7 @@ if (!isset($_SESSION["auth_data"]['nome_pg']) || empty($_SESSION["auth_data"]['n
 }  
 else {
     $usuario = $_SESSION["auth_data"]['nome_pg'];
+    $id = $_SESSION["auth_data"]['id'];
     echo "<h1 id=\"idusuario\" data-id=\"".$_SESSION["auth_data"]['id']. "\">Bem vindo ao sistema, $usuario</h1>";
 
     echo "<title>$usuario Dashboard</title>";
@@ -85,7 +86,8 @@ $dates = new DatePeriod(
     <a class="logout" href="../lib/logout.php" > Sair </a> <br>
     <div id="selecao" width="80%">
     <h3 align="center">Selecione as datas de arranchamento abaixo: </h3>
-    <form name="refeicoes" action="user_update.php" method="post">
+    <!-- Formulário  -->
+    <form name="refeicoes">
     <table id="tabela" align="center" width="50%" border="1">
         <tr>
             <th align="center">Data</th>
@@ -94,7 +96,7 @@ $dates = new DatePeriod(
             <th align="center">Janta</th>
         </tr>
         <?php
-      
+        echo "<a type=\"hidden\" id=\"idusuario\" value=\"$id\"></a>";
         foreach ($dates as $index => $d) {
             
             echo "<tr>";
@@ -107,7 +109,7 @@ $dates = new DatePeriod(
         }  
          ?>
     </table>
-      <input class="btn_enviar" align="center" type="submit" value="Enviar">
+      <input id="enviar" class="btn_enviar" align="center" type="submit" value="Enviar" name="salvar">
     </form> 
     </div> 
 </body>
@@ -115,22 +117,8 @@ $dates = new DatePeriod(
 
 <?php 
 //DEPURANDO AQUI
-echo "<h1>Área de testes</h1>";
+echo "<h1>Área de testes</h1> <br> <br>
+<p id=\"resposta\"> </p>
 
-echo "$usuario arranchado para:<br>";
-echo "<ul>";
-echo "Café:";
-    foreach($_POST['cafe'] as $data => $valor) {
-        echo "<li>$data" . "</li>";
-    } ;
-echo "Almoço:";
-    foreach($_POST['almoco'] as $data => $valor) {
-        echo "<li>$data" . "</li>";
-    } ;
-echo "Janta:";
-    foreach($_POST['janta'] as $data => $valor) {
-        echo "<li>$data" . "</li>";
-    } ;
-echo "</ul>";
-echo "<h1>Fim área de testes</h1>";
+<h1>Fim área de testes</h1>";
 ?>

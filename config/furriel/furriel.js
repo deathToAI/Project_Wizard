@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } // Fim do loop pelas linhas
 
             //Envio de dados para o servidor
-            console.log(`Refeições a serem salvas: ${JSON.stringify(refeicoes)}`); // Depuração: mostra o array de refeições no console
+            //console.log(`Refeições a serem salvas: ${JSON.stringify(refeicoes)}`); // Depuração: mostra o array de refeições no console
             
           //  Envia os dados para o servidor
             const payload = JSON.stringify(refeicoes);      // pode ser "[]"

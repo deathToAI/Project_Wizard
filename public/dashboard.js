@@ -14,25 +14,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const url = 'user_retrieve.php'
         + '?dias=' + encodeURIComponent(JSON.stringify(listaDias))
         + '&id=' + encodeURIComponent(idUsuario);
-        console.log('URL da requisição:', url); // Log da URL da requisição para depuração
+        //console.log('URL da requisição:', url); // Log da URL da requisição para depuração
         //Pega as refeições do usuário
         fetch(`user_retrieve.php?dias=${encodeURIComponent(JSON.stringify(listaDias))}&id=${encodeURIComponent(idUsuario)}`)
         .then(response => response.json())
         .then(data => {
-            console.log('Dados recebidos:', data); // Log dos dados recebidos para depuração
+            //console.log('Dados recebidos:', data); // Log dos dados recebidos para depuração
             data.forEach(function(item) {
                 const dia = item.data_refeicao; //Pega a data do item
-                console.log('Processando data:', dia); // Log da data sendo processada para depuração
+               // console.log('Processando data:', dia); // Log da data sendo processada para depuração
                 const cellDia = tabela.querySelector('td.dia[value="' + String(dia).trim() +  '"]'); //Encontra a célula correspondente à data
                 if (!cellDia) return; //Se não encontrar a célula, retorna
                 const linha = cellDia.parentElement; //Pega a linha da célula
-                console.log('Linha encontrada para a data', dia, ':', linha); // Log da linha encontrada para depuração
+                //console.log('Linha encontrada para a data', dia, ':', linha); // Log da linha encontrada para depuração
 
                 const refeicoes = (item.refeicao ?? item.refeicoes ?? '')
                 .split(',')
                 .map(r => r.trim())
                 .filter(Boolean);
-                console.log('Refeições para a data', dia, ':', refeicoes); // Log das refeições para depuração
+                //console.log('Refeições para a data', dia, ':', refeicoes); // Log das refeições para depuração
 
                 if (refeicoes.includes('cafe'))   { linha.querySelector('input[name="cafe"]').checked   = true; }
                 if (refeicoes.includes('almoco')) { linha.querySelector('input[name="almoco"]').checked = true; }
@@ -68,5 +68,72 @@ document.addEventListener('DOMContentLoaded', function() {
         } // fim do for i
     } // fim da função updateSelections
 
+
+    enviar = document.getElementById('enviar');
+    function saveTable(){
+        const tabela = document.getElementById('tabela');
+        const idUsuario = document.getElementById('idusuario').dataset.id;
+        const linhas = tabela.rows;
+        const dados = {
+            cafe: [],
+            almoco: [],
+            janta: []
+        };
+        
+        for (let i = 1; i < linhas.length; i++) {
+        const linha = linhas[i];
+        const celulas = linha.cells;
+
+        for (let j = 1; j < celulas.length; j++) {
+            const celula = celulas[j];
+            const checkbox = celula.querySelector('input[type="checkbox"]');
+
+            if (checkbox.checked) {
+            const data = checkbox.value;
+            const refeicao = checkbox.name;
+
+            switch(refeicao){
+                case 'cafe':
+                    dados[refeicao].push(data);
+                continue;
+                case 'almoco':
+                    dados[refeicao].push(data);
+                continue;
+                case 'janta':
+                    dados[refeicao].push(data);
+                continue;
+                default:
+                    break;
+
+            }//fim switch
+            }//fim if checkbox.checked
+        }//fim for j
+        }//fim for i
+        dados['id'] = idUsuario; // Adiciona o ID do usuário aos dados
+        console.log("Função savetable enviará JSON:" + JSON.stringify(dados));
+
+        fetch('user_update.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dados)
+        })
+        .then((response) => response.json())
+        .then( alert("Formulário enviado com sucesso!") )
+        .then((data) => console.log(data))
+        .catch((error) => console.error("Erro ao enviar formulário: " + error.message) 
+    );
+        
+
+       
+
+    }//fim de saveTable
+
+    enviar.addEventListener('click', (e) => {
+        e.preventDefault(); // Evita que o formulário seja submetido normalmente
+    saveTable();
+    });
+    
     updateSelections(); // Chama a função para atualizar as seleções ao carregar a página
 });
