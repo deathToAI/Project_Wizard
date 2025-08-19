@@ -9,6 +9,22 @@ body {
     line-height: 1.5; /* Melhora a legibilidade do texto */
 }
 
+/*
+  Estilo padrão para todos os elementos <div>.
+
+  AVISO: Estilizar um seletor genérico como 'div' pode ter efeitos colaterais
+  indesejados em elementos usados para layout. Pode ser necessário
+  redefinir estilos em divs específicos (ex: padding: 0; background: none;).
+*/
+/* Estilo para elementos com a classe 'card' */
+.card {
+    background-color: #98c059a9; 
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
 p {
     margin-bottom: 1em; /* Espaçamento abaixo dos parágrafos */
 }
@@ -67,7 +83,7 @@ header {
 .navbar-right {
     display: flex;
     align-items: center;
-    gap: 25px; /* Espaço entre o menu e o relógio */
+    gap: 15px; /* Espaço entre o menu e o relógio */
 }
 
 #relogio {

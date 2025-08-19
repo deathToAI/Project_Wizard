@@ -56,7 +56,7 @@ $dates = new DatePeriod(
     <?php echo "Hoje é ".$formatter->format($momento); ?>
 </p>
 
-<div id="selecao" style="margin-top: 20px;">
+<div id="selecao" class="card" style="margin-top: 20px;">
     <h3 align="center">Selecione as datas de arranchamento abaixo: </h3>
     <!-- Formulário  -->
     <form name="refeicoes">

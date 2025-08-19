@@ -1,4 +1,10 @@
-
+<?php
+// Garante que a sessão seja iniciada em todas as páginas que incluem este cabeçalho.
+// A verificação `session_status()` evita erros se a sessão já foi iniciada.
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -15,18 +21,21 @@
             <!-- Links com caminhos absolutos para robustez -->
             <a href="/index.php" class="logo">Arranchamento</a>
             <div class="navbar-right">
+                <span id="relogio"></span>
                 <ul class="menu">
                     <li><a href="/index.php">Início</a></li>
-                    <li><a href="/public/dashboard.php">Minhas Seleções</a></li>
-                    <?php if (isset($_SESSION['auth_data']['role']) && $_SESSION['auth_data']['role'] === 'furriel'): ?>
-                        <li><a href="/config/furriel/furriel.php">Painel Furriel</a></li>
-                    <?php endif; ?>
-                    <?php if (isset($_SESSION['auth_data']['role']) && $_SESSION['auth_data']['role'] === 'admin'): ?>
-                        <li><a href="/config/admin/admin.php">Painel Admin</a></li>
-                    <?php endif; ?>
-                    <li><a href="/lib/logout.php">Sair</a></li>
+                    <?php if (isset($_SESSION['auth_data'])): // Verifica se o usuário está autenticado ?>
+                        <?php if ($_SESSION['auth_data']['role'] === 'comum'): ?>
+                            <li><a href="/public/dashboard.php">Minhas Seleções</a></li>
+                        <?php elseif ($_SESSION['auth_data']['role'] === 'furriel'): ?>
+                            <li><a href="/config/furriel/furriel.php">Painel Furriel</a></li>
+                        <?php elseif ($_SESSION['auth_data']['role'] === 'admin'): ?>
+                            <li><a href="/config/admin/admin.php">Painel Admin</a></li>
+                        <?php endif; ?>
+                        <li><a href="/lib/logout.php">Sair</a></li>
+                    <?php endif; // Fim da verificação de autenticação ?>
                 </ul>
-                <span id="relogio"></span>
+                
             </div>
         </nav>
     </header>

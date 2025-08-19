@@ -55,7 +55,7 @@ echo '<h2>Usuários Arranchados</h2>';
         $stmt_arranchados = $pdo->query("SELECT user_id, data_refeicao, refeicao FROM arranchados");
         $arranchados= $stmt_arranchados->fetchAll(PDO::FETCH_ASSOC);
         echo "<form>";
-        echo "<div align='center' id=\"formulario\">";
+        echo "<div class=\"card\" align='center' id=\"formulario\">";
         echo "Selecione a data:<br>
 
         

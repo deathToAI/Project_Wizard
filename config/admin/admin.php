@@ -1,22 +1,9 @@
 <?php
 // config/admin.php
 
-echo '<!DOCTYPE html>
-<html>
-<head>
-
-    <meta http-equiv="Content-Security-Policy" content="default-src \'self\'; script-src \'self\' \'unsafe-inline\'; style-src \'self\' \'unsafe-inline\';">
-    <title>Painel Admin</title>
-    <link rel="stylesheet" href="/public/css/styles.css" onload="this.media=\'all\'">
-    <noscript><link rel="stylesheet" href="/public/css/styles.css"></noscript>
-    <script src="/lib/scripts.js" defer></script>
-    <link href="../../public/css/styles.css" rel="stylesheet" type="text/css">
-    <link rel="icon" href="data:,">
-</head>';
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
-
 
 // 2. Verifica se há dados de autenticação
 if (empty($_SESSION['auth_data']['role']) || $_SESSION['auth_data']['role'] !== 'admin') {
@@ -24,6 +11,9 @@ if (empty($_SESSION['auth_data']['role']) || $_SESSION['auth_data']['role'] !== 
         header("Location:../../index.php");
         exit();
 }
+
+// Inclui o cabeçalho da página. Isso já inicia o HTML, head, e o body.
+include __DIR__ . '/../../lib/header.php';
 
 // Inclui os arquivos necessários
 require_once __DIR__ . '/../../database/DbConnection.php';
@@ -37,7 +27,7 @@ $feedback_message = '';
 $feedback_type = '';
 
 function listUsers(){
-    echo '<h2>Usuários Cadastrados</h2>';
+    echo '<div class="card"><h2>Usuários Cadastrados</h2>';
     try {
         $pdo = DbConnection();
         if ($pdo === null) {
@@ -69,7 +59,7 @@ function listUsers(){
             echo "</tr>";
 
         }
-        echo "</table>";
+        echo "</table> </div>";
 
     } catch (PDOException $e) {
         echo "<strong>ERRO:</strong> " . htmlspecialchars($e->getMessage());
@@ -80,18 +70,16 @@ function listUsers(){
 <!-- ===================-->
 <!-- HTML (FRONT-END)   -->
 <!-- ===================-->
-<body>
-    <?php
-    echo "<h1>Bem vindo,". htmlspecialchars($_SESSION['auth_data']['nome_pg']).",ao painel de Admin</h1>";
-     ?>
-    <a class="logout" href="../../lib/logout.php" > Sair </a> <br>
+<?php
+echo "<h1>Bem vindo,". htmlspecialchars($_SESSION['auth_data']['nome_pg']).",ao painel de Admin</h1>";
+?>
     <h2>Gerenciamento de usuários</h2>
     <?php if ($feedback_message): ?>
-        <div class="feedback <?php echo $feedback_type; ?>">
+        <div class="card feedback <?php echo $feedback_type; ?>">
             <?php echo htmlspecialchars($feedback_message); ?>
         </div>
     <?php endif; ?>
-<div id="Criar Usuario" class="painel">
+<div id="create_user" class="card painel">
         <h3>Criar Usuário</h3>
         <p>Preencha os campos abaixo para criar um novo usuário:</p>
         <form action="create_user.php" method="POST">
@@ -193,10 +181,10 @@ function define_modal(){
     </div>';
 }
 // Chama a função para listar os usuários
-echo "<br>Seu Token:$_SESSION[token]";
+
 define_modal();
 listUsers();
 
+// Inclui o rodapé da página
+include __DIR__ . '/../../lib/footer.php';
 ?>
-</body>
-</html>

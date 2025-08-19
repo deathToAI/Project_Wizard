@@ -10,7 +10,7 @@ if (empty($_SESSION['token'])) {
 if (!isset($_POST['create_user'])) {
     die("Ação inválida.");
 }
-require_once __DIR__ . '/../lib/DbConnection.php';
+require_once __DIR__ . '/../../database/DbConnection.php';
 function createUser($username, $password, $nome_pg, $role,$grupo) {
     $pdo = DbConnection(); // Conexão PDO
 
