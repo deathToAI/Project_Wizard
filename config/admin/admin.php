@@ -120,16 +120,16 @@ echo "<h1>Bem vindo,". htmlspecialchars($_SESSION['auth_data']['nome_pg']).",ao 
 <?php
 // Verifica o feedback da criação do usuário
 if (isset($_SESSION['createUserResult'])) {
-    echo $_SESSION['createUserResult']['message'];
+    echo "<p>" . htmlspecialchars($_SESSION['createUserResult']['message']) . "</p>";
     unset($_SESSION['createUserResult']); // Limpa a mensagem após exibi-la
 }
 // Verifica o feedback da deleção do usuário
 if (isset($_SESSION['deleteUserResult'])) {
-    echo $_SESSION['deleteUserResult']['message'];
+    echo "<p>" . htmlspecialchars($_SESSION['deleteUserResult']['message']) . "</p>";
     unset($_SESSION['deleteUserResult']); // Limpa a mensagem após exibi-la
 }
 if (isset($_SESSION['editUserResult'])) {
-    echo $_SESSION['editUserResult']['message'];
+    echo "<p>" . htmlspecialchars($_SESSION['editUserResult']['message']) . "</p>";
     unset($_SESSION['editUserResult']); // Limpa a mensagem após exibi-la
 }
 function define_modal(){

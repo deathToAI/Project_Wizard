@@ -1,0 +1,5 @@
+n
+[2025-08-19 18:21:08] [ACCESS] Usuário 'admin' logado com sucesso.
+[2025-08-19 18:21:12] [WARNING] Tentativa de login falhou. Senha incorreta para o usuário: 'admin'
+[2025-08-19 18:21:17] [WARNING] Tentativa de login falhou. Senha incorreta para o usuário: 'gengiuseppe'
+[2025-08-19 18:21:19] [ACCESS] Usuário 'gengiuseppe' logado com sucesso.

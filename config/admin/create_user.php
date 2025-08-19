@@ -11,6 +11,7 @@ if (!isset($_POST['create_user'])) {
     die("Ação inválida.");
 }
 require_once __DIR__ . '/../../database/DbConnection.php';
+require_once __DIR__ . '/../../lib/Logger.php';
 function createUser($username, $password, $nome_pg, $role,$grupo) {
     $pdo = DbConnection(); // Conexão PDO
 
@@ -35,6 +36,8 @@ function createUser($username, $password, $nome_pg, $role,$grupo) {
     $stmt->bindParam(':role', $role);
     $stmt->bindParam(':grupo', $grupo);   
     $stmt->execute();
+    $admin_username = $_SESSION['auth_data']['username'] ?? 'sistema';
+    log_message("Admin '{$admin_username}' criou o usuário '{$username}'.", 'INFO');
 
     return ['success' => true, 'message' => 'Usuário criado com sucesso!'];
     exit();

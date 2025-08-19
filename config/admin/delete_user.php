@@ -1,6 +1,10 @@
 <?php
 // config/delete_user.php
-require_once __DIR__ . '/../lib/DbConnection.php';
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+require_once __DIR__ . '/../../lib/Logger.php';
+require_once __DIR__ . '/../../database/DbConnection.php';
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 function deleteUser($userId) {
     $pdo = DbConnection(); // Conexão PDO
@@ -15,6 +19,8 @@ function deleteUser($userId) {
         $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
         $stmt->execute();
 
+        $admin_username = $_SESSION['auth_data']['username'] ?? 'sistema';
+        log_message("Admin '{$admin_username}' deletou o usuário com ID '{$userId}'.", 'INFO');
         return ['success' => true, 'message' => 'Usuário deletado com sucesso!'];
 
         exit();
@@ -25,5 +31,6 @@ function deleteUser($userId) {
 $result = deleteUser($id);
 $_SESSION['deleteUserResult'] = $result;
 header('Location: admin.php');
+exit();
 
 ?>

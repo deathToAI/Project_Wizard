@@ -21,6 +21,7 @@ if (empty($_POST['usuario']) || empty($_POST['senha'])) {
 }
 // Caso o usuário já esteja logado e não é admin, redireciona para a dashboard
 require_once '../database/DbConnection.php';
+require_once __DIR__ . '/Logger.php';
 $pdo = DbConnection();
 if ($pdo === null) {
     $_SESSION["erro"] = "Erro na conexão com o banco de dados";
@@ -37,6 +38,7 @@ $usercheck->execute();
 $user = $usercheck->fetch(PDO::FETCH_ASSOC);
 
 if (!$user) {
+    log_message("Tentativa de login falhou. Usuário não encontrado: '{$username}'", 'WARNING');
     $_SESSION["erro"] = "Credenciais não encontradas";
     // Redireciona para a página de login
     header("Location:../index.php");
@@ -45,6 +47,7 @@ if (!$user) {
 // Verifica se a senha está correta
 if (password_verify($userpass, $user['password'])) {
         // Senha correta, inicia sessão
+        log_message("Usuário '{$user['username']}' logado com sucesso.", 'ACCESS');
         session_regenerate_id(true); // Gera um novo ID de sessão para segurança
         $_SESSION["auth_data"] = [
             'id' => $user['id'],
@@ -74,6 +77,7 @@ if (password_verify($userpass, $user['password'])) {
         die();
         
     }else {
+        log_message("Tentativa de login falhou. Senha incorreta para o usuário: '{$username}'", 'WARNING');
         $_SESSION["erro"] = "Senha incorreta";
         header("Location:../index.php");
         exit();
@@ -81,5 +85,3 @@ if (password_verify($userpass, $user['password'])) {
 
 
 ?>
-
-
