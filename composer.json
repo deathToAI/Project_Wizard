@@ -1,0 +1,12 @@
+{
+    "name": "dtai/project_wizard",
+    "authors": [
+        {
+            "name": "",
+            "email": "example@example.com"
+        }
+    ],
+    "require": {
+        "phpoffice/phpspreadsheet": "^5.0"
+    }
+}
