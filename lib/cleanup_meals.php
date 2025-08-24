@@ -3,7 +3,8 @@
 // Script para ser executado via Cron Job para limpar registros antigos da tabela 'arranchados'.
 //LEMBRAR DE:
 //crontab -e
-//1 0 1 * * /usr/bin/php /home/dtai/Projects/Tutorials/Project_Wizard/lib/cleanup_meals.php
+//1 0 1 * * /usr/bin/php /caminho/do/projeto/lib/cleanup_meals.php
+//1 0 1 * * /usr/bin/sqlite3 -cmd "DELETE FROM arranchados WHERE data_refeicao < date('now');" /caminho/do/projeto/database/refeicoes.sqlite
 // Define o fuso horário para garantir que a data seja calculada corretamente
 date_default_timezone_set('America/Sao_Paulo');
 
