@@ -1,18 +1,13 @@
-
+# Ativa o motor de reescrita
 RewriteEngine On
-RewriteRule ^$ public/ [L]
-RewriteRule (.*) public/$1 [L]
 
-<IfModule php5_module>
+# Redireciona todas as requisições que não sejam para um arquivo ou diretório real
+# para o public/index.php
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ public/index.php [L]
+
+# Configurações de PHP
+<IfModule mod_php8.so>
     php_flag session.cookie_httponly on
 </IfModule>
-<Directory /home/dtai/Área de trabalho/Scripts/Tutorials/Project_Wizard/config>
-    Require all denied
-</Directory>
-<Directory /home/dtai/Área de trabalho/Scripts/Tutorials/Project_Wizard/lib>
-    Require all denied
-</Directory>
-<Directory /home/dtai/Área de trabalho/Scripts/Tutorials/Project_Wizard/storage>
-    Require all denied
-</Directory>
-

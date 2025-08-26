@@ -18,42 +18,67 @@ O projeto não tem nenhuma finalidade comercial ou lucro de qualquer natureza po
 **Desenvolvido para facilitar o gerenciamento de agendamento de refeições e diminuir a dependência de sistemas arcaicos dependentes unicamente de *input* humano e de infindáveis resmas de papel!**
 
 
-```sh
-cat /etc/issue
-#Ubuntu 24.04.2 LTS \n \l
-
-uname -a
-#Linux factory 6.14.0-27-generic #27~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue Jul 22 17:38:49 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
-
-php -v
-#PHP 8.3.6 (cli) (built: Jul 14 2025 18:30:55) (NTS)
-```
-
 ##  Tecnologias Utilizadas
-- **Backend**: PHP + PHP Composer(PHPSpreadsheets)
-- **Banco de Dados**: SQLite(com pdo do PHP)
-- **Frontend**: HTML, CSS e JavaScript puro
+- **Backend**: PHP 8+
+- **Banco de Dados**: SQLite
+- **Frontend**: HTML, CSS e JavaScript (vanilla)
+- **Dependências**: Composer, PhpSpreadsheet
 
 ## Como Instalar
 
-### Instalação do Ambiente de Desenvolvimento
+A forma mais fácil e recomendada de instalar o projeto em um ambiente Debian/Ubuntu é usando o script de instalação automatizada.
 
-#### 0. Instalação Rápida (Recomendado)
-Para um ambiente baseado em Debian/Ubuntu, você pode usar o script de instalação automatizada. Ele cuidará de todos os passos abaixo.
+### Opção 1: Instalação Automatizada (Recomendado)
+
+O script `auto_install.sh` foi criado para configurar todo o ambiente necessário, incluindo Apache, PHP, SSL e as permissões do projeto.
+
+1.  **Clone o repositório:**
+    ```bash
+    git clone https://github.com/deathToAI/Project_Wizard.git
+    cd Project_Wizard
+    ```
+
+2.  **Torne o script executável:**
+    ```bash
+    chmod +x auto_install.sh
+    ```
+
+3.  **Execute o script com `sudo`:**
+    ```bash
+    sudo ./auto_install.sh
+    ```
+
+O script irá guiá-lo pelo processo, solicitar as senhas para os usuários `admin` e `furriel`, e configurar o servidor web. Ao final, o sistema estará acessível em `https://localhost`.
+
+> **Nota:** O script move o projeto para `/var/www/html/Project_Wizard`. O diretório original onde você clonou o repositório não será mais utilizado pelo servidor.
+
+---
+
+### Opção 2: Instalação Manual
+
+Se você prefere configurar o ambiente manualmente, siga os passos abaixo.
+
+#### 1. Pré-requisitos
+Instale o Apache, PHP com as extensões necessárias e o Composer.
 
 ```bash
-chmod +x auto_install.sh
-./auto_install.sh
+sudo apt update
+sudo apt install -y apache2 libapache2-mod-php php php-sqlite3 php-intl composer
 ```
 
 Se preferir a instalação manual, siga os passos abaixo.
 
 #### 1. Instalação de Pacotes
 ```
+sudo apt update
+sudo apt install apache2 libapache2-mod-php
+sudo usermod -a -G www-data dtai
+sudo chown -R dtai:www-data /home/dtai/Projects/Tutorials/Project_Wizard
 sudo apt install php php-sqlite3 php-pdo composer 
 composer init
 composer require phpspreadsheet
 ```
+
 #### 2. Configuração do php
 ```
 nano /etc/php/8.3/cli/php.ini 
@@ -61,11 +86,21 @@ nano /etc/php/8.3/cli/php.ini
 #Descomentar extension=pdo_sqlite (linha 960)
 ```
 
-#### 3. Modificar a senha de administrador em <span style="color:red">*'gerar_pass.php'*</span> e rodar o script com 
+### 3. Configuração do Apache
+```
+sudo nano /etc/apache2/sites-available/project-wizard-ssl.conf
+sudo nano /etc/apache2/sites-available/000-default.conf
+sudo a2enmod ssl
+sudo mkdir -p /etc/apache2/ssl
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+```
+**Lembrar de modificar o DOCUMENT_ROOT em /etc/apache2/sites-available/project-wizard-ssl.conf para sua máquina!**
+
+#### 4. Modificar a senha de administrador em <span style="color:red">*'gerar_pass.php'*</span> e rodar o script com 
 `php gerar_pass.php`. Isso fará o seguinte:
     a. Criará a database em **/raiz/do/projeto/database/refeicoes.sqlite** (Pode ser modificado desde que as conexões em **database.php** também sejam modificadas)
     b.Criará as tabelas de **'user'** e **'arranchados'**
     c.Criará o user **'admin'** e **'furriel'** com a senha já criptografa
 ## Lembre-se de **DELETAR gerar_pass.php**
 
-#### 4. Fazer login como admin e inserir os usuários
+#### 5. Fazer login como admin e inserir os usuários
