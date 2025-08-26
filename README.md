@@ -97,9 +97,9 @@ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ss
 **Lembrar de modificar o DOCUMENT_ROOT em /etc/apache2/sites-available/project-wizard-ssl.conf para sua máquina!**
 
 #### 4. Modificar a senha de administrador em <span style="color:red">*'gerar_pass.php'*</span> e rodar o script com 
-`php gerar_pass.php`. Isso fará o seguinte:
-    a. Criará a database em **/raiz/do/projeto/database/refeicoes.sqlite** (Pode ser modificado desde que as conexões em **database.php** também sejam modificadas)
-    b.Criará as tabelas de **'user'** e **'arranchados'**
+`php gerar_pass.php`. Isso fará o seguinte:<br>
+    a. Criará a database em **/raiz/do/projeto/database/refeicoes.sqlite** (Pode ser modificado desde que as conexões em **database.php** também sejam modificadas)<br>
+    b.Criará as tabelas de **'user'** e **'arranchados'** <br>
     c.Criará o user **'admin'** e **'furriel'** com a senha já criptografa
 ## Lembre-se de **DELETAR gerar_pass.php**
 
