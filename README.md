@@ -72,9 +72,10 @@ Se preferir a instalação manual, siga os passos abaixo.
 ```
 sudo apt update
 sudo apt install apache2 libapache2-mod-php
-sudo usermod -a -G www-data dtai
-sudo chown -R dtai:www-data /home/dtai/Projects/Tutorials/Project_Wizard
-sudo apt install php php-sqlite3 php-pdo composer 
+sudo usermod -a -G www-data $(whoami)
+sudo mkdir -p /var/www/html/arranchamento
+sudo chown -R $(whoami):www-data /var/www/html/arranchamento
+sudo apt install -y php php-sqlite3 sqlite3 php-pdo composer 
 composer init
 composer require phpspreadsheet
 
@@ -84,20 +85,21 @@ composer require phpspreadsheet
 
 #### 2. Configuração do php
 ```
-nano /etc/php/8.3/cli/php.ini 
+sudo nano /etc/php/8.3/cli/php.ini
 #Descomentar extension=intl (linha 946)
 #Descomentar extension=pdo_sqlite (linha 960)
 ```
 
 ### 3. Configuração do Apache
 ```
-sudo nano /etc/apache2/sites-available/project-wizard-ssl.conf
+sudo nano /etc/apache2/sites-available/arranchamento.conf 
 sudo nano /etc/apache2/sites-available/000-default.conf
 sudo a2enmod ssl
+sudo a2enmod rewrite
 sudo mkdir -p /etc/apache2/ssl
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
 ```
-**Lembrar de modificar o DOCUMENT_ROOT em /etc/apache2/sites-available/project-wizard-ssl.conf para sua máquina!**
+**Lembrar de modificar o DOCUMENT_ROOT em /etc/apache2/sites-available/arranchamento.conf para sua máquina!**
 
 #### 4. Modificar a senha de administrador em <span style="color:red">*'gerar_pass.php'*</span> e rodar o script com 
 `php gerar_pass.php`. Isso fará o seguinte:<br>
