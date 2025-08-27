@@ -73,7 +73,7 @@ Se preferir a instalação manual, siga os passos abaixo.
 sudo apt update
 sudo apt install apache2 libapache2-mod-php
 sudo usermod -a -G www-data $(whoami)
-mkdir -p /var/www/html/arranchamento
+sudo mkdir -p /var/www/html/arranchamento
 sudo chown -R $(whoami):www-data /var/www/html/arranchamento
 sudo apt install php php-sqlite3 php-pdo composer 
 composer init
