@@ -77,6 +77,9 @@ sudo chown -R dtai:www-data /home/dtai/Projects/Tutorials/Project_Wizard
 sudo apt install php php-sqlite3 php-pdo composer 
 composer init
 composer require phpspreadsheet
+
+#Talvez seja necessário 
+#sudo apt install php-xml; composer install --ignore-platform-reqs
 ```
 
 #### 2. Configuração do php

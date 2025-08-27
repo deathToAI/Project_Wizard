@@ -1,15 +1,2 @@
 n
-[2025-08-19 18:21:08] [ACCESS] Usuário 'admin' logado com sucesso.
-[2025-08-19 18:21:12] [WARNING] Tentativa de login falhou. Senha incorreta para o usuário: 'admin'
-[2025-08-19 18:21:17] [WARNING] Tentativa de login falhou. Senha incorreta para o usuário: 'gengiuseppe'
-[2025-08-19 18:21:19] [ACCESS] Usuário 'gengiuseppe' logado com sucesso.
-[2025-08-23 22:45:18] [ACCESS] Usuário 'furriel' logado com sucesso.
-[2025-08-23 22:45:27] [ACCESS] Usuário 'admin' logado com sucesso.
-[2025-08-23 22:45:40] [ACCESS] Usuário 'gengiuseppe' logado com sucesso.
-[2025-08-23 22:46:00] [ACCESS] Usuário 'furriel' logado com sucesso.
-[2025-08-23 22:50:40] [ACCESS] Usuário 'furriel' logado com sucesso.
-[2025-08-24 00:08:14] [ACCESS] Usuário 'admin' logado com sucesso.
-[2025-08-24 00:08:32] [INFO] Admin 'admin' criou o usuário 'sgtschalemberg'.
-[2025-08-24 00:08:58] [INFO] Admin 'admin' criou o usuário 'tenpretto'.
-[2025-08-24 00:09:05] [INFO] Admin 'admin' criou o usuário 'capveloz'.
-[2025-08-24 00:15:52] [ACCESS] Usuário 'furriel' logado com sucesso.
+[2025-08-27 10:39:48] [ACCESS] Usuário 'tenpretto' logado com sucesso.
