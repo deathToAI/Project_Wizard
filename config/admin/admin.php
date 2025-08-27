@@ -34,7 +34,7 @@ function listUsers(){
             echo "<strong>ERRO:</strong> Não foi possível conectar ao banco de dados.";
             exit();
         }
-        $stmt = $pdo->query("SELECT id, username, nome_pg, role, grupo FROM users");
+        $stmt = $pdo->query("SELECT id, username, nome_pg, role, grupo FROM users WHERE username NOT IN ('admin', 'furriel')");
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo "<table border='1'>
             <tr>

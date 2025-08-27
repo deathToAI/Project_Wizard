@@ -5,7 +5,7 @@ RewriteEngine On
 # para o public/index.php
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^ public/index.php [L]
+RewriteRule ^ index.php [QSA,L]
 
 # Configurações de PHP
 <IfModule mod_php8.so>
