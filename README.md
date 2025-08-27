@@ -72,8 +72,9 @@ Se preferir a instalação manual, siga os passos abaixo.
 ```
 sudo apt update
 sudo apt install apache2 libapache2-mod-php
-sudo usermod -a -G www-data dtai
-sudo chown -R dtai:www-data /home/dtai/Projects/Tutorials/Project_Wizard
+sudo usermod -a -G www-data $(whoami)
+mkdir -p /var/www/html/arranchamento
+sudo chown -R $(whoami):www-data /var/www/html/arranchamento
 sudo apt install php php-sqlite3 php-pdo composer 
 composer init
 composer require phpspreadsheet
