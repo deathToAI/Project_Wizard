@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Sair imediatamente se um comando sair com um status diferente de zero,
+# tratar variáveis não definidas como erros e falhar em pipelines.
+set -euo pipefail
+
 # Define variáveis de cor para a saída
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -7,7 +11,7 @@ RED='\033[0;31m'
 NC='\033[0m' # Sem Cor
 
 # --- Variáveis de Configuração ---
-PROJECT_NAME="Project_Wizard"
+PROJECT_NAME="arranchamento"
 APACHE_WWW_DIR="/var/www/html"
 PROJECT_DEST_DIR="$APACHE_WWW_DIR/$PROJECT_NAME"
 PROJECT_SOURCE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
@@ -37,7 +41,7 @@ check_root
 
 # --- PASSO 1: Instalação de Pacotes ---
 echo -e "\n${YELLOW}[PASSO 1/6] Instalando pacotes do sistema (Apache, PHP, Composer...)${NC}"
-if ! apt-get update || ! apt-get install -y apache2 libapache2-mod-php php php-sqlite3 php-intl composer; then
+if ! { apt-get update && apt-get install -y apache2 libapache2-mod-php php php-sqlite3 php-intl composer -y; }; then
     echo -e "${RED}ERRO: Falha ao instalar pacotes. Verifique os logs do apt-get.${NC}"
     exit 1
 fi
@@ -46,13 +50,15 @@ echo -e "${GREEN}Pacotes do sistema instalados com sucesso.${NC}"
 # --- PASSO 2: Mover Projeto e Definir Permissões ---
 echo -e "\n${YELLOW}[PASSO 2/6] Movendo arquivos do projeto para ${PROJECT_DEST_DIR}...${NC}"
 mkdir -p "$PROJECT_DEST_DIR"
-rsync -a --exclude='.git' --exclude='auto_install.sh' "$PROJECT_SOURCE_DIR/" "$PROJECT_DEST_DIR/"
+rsync -a --exclude='.git' --exclude='.gitignore' --exclude='auto_install.sh' "$PROJECT_SOURCE_DIR/" "$PROJECT_DEST_DIR/"
 chown -R www-data:www-data "$PROJECT_DEST_DIR"
 echo -e "${GREEN}Arquivos movidos e permissões definidas.${NC}"
 
 # --- PASSO 3: Instalar Dependências do PHP ---
 echo -e "\n${YELLOW}[PASSO 3/6] Instalando dependências do PHP com o Composer...${NC}"
-cd "$PROJECT_DEST_DIR" || exit
+# Usando pushd/popd para mudar de diretório temporariamente
+pushd "$PROJECT_DEST_DIR" > /dev/null
+# Nota: Se o projeto já tiver um 'composer.json', o comando 'composer install' seria mais apropriado.
 if ! sudo -u www-data composer require phpoffice/phpspreadsheet; then
     echo -e "${RED}ERRO: Falha ao instalar dependências com o Composer.${NC}"
     exit 1
@@ -67,25 +73,37 @@ if [ ! -f "gerar_pass.php" ]; then
     exit 1
 fi
 
-# Solicita a senha do Admin
-read -s -p "Digite a nova senha para o usuário 'admin': " ADMIN_PASS
-echo
-if [ "$ADMIN_PASS" != "$ADMIN_PASS_CONFIRM" ] || [ -z "$ADMIN_PASS" ]; then
-    echo -e "${RED}ERRO: As senhas do admin não coincidem ou estão vazias. Abortando.${NC}"
-    exit 1
-fi
+while true; do
+    read -s -p "Digite a nova senha para o usuário 'admin': " ADMIN_PASS
+    echo
+    read -s -p "Confirme a nova senha para o usuário 'admin': " ADMIN_PASS_CONFIRM
+    echo
+    if [ -z "$ADMIN_PASS" ]; then
+        echo -e "${RED}A senha do admin não pode ser vazia. Tente novamente.${NC}"
+    elif [ "$ADMIN_PASS" != "$ADMIN_PASS_CONFIRM" ]; then
+        echo -e "${RED}As senhas do admin não coincidem. Tente novamente.${NC}"
+    else
+        break
+    fi
+done
 
-# Solicita a senha do Furriel
-read -s -p "Digite a nova senha para o usuário 'furriel': " FURRIEL_PASS
-echo
-if [ "$FURRIEL_PASS" != "$FURRIEL_PASS_CONFIRM" ] || [ -z "$FURRIEL_PASS" ]; then
-    echo -e "${RED}ERRO: As senhas do furriel não coincidem ou estão vazias. Abortando.${NC}"
-    exit 1
-fi
+while true; do
+    read -s -p "Digite a nova senha para o usuário 'furriel': " FURRIEL_PASS
+    echo
+    read -s -p "Confirme a nova senha para o usuário 'furriel': " FURRIEL_PASS_CONFIRM
+    echo
+    if [ -z "$FURRIEL_PASS" ]; then
+        echo -e "${RED}A senha do furriel não pode ser vazia. Tente novamente.${NC}"
+    elif [ "$FURRIEL_PASS" != "$FURRIEL_PASS_CONFIRM" ]; then
+        echo -e "${RED}As senhas do furriel não coincidem. Tente novamente.${NC}"
+    else
+        break
+    fi
+done
 
 # Usa 'sed' para substituir as senhas padrão no arquivo
-sed -i "s|'senha'    => 'AdminPass123'|'senha'    => '$ADMIN_PASS'|g" gerar_pass.php
-sed -i "s|'senha'    => 'furriel'|'senha'    => '$FURRIEL_PASS'|g" gerar_pass.php
+sed -i "s#'senha' *=> *'AdminPass123'#'senha'    => '$ADMIN_PASS'#g" gerar_pass.php
+sed -i "s#'senha' *=> *'furriel'#'senha'    => '$FURRIEL_PASS'#g" gerar_pass.php
 echo -e "${GREEN}Senhas atualizadas no script de configuração.${NC}"
 
 echo "Executando o script para criar o banco de dados e os usuários..."
@@ -100,6 +118,9 @@ if [[ $REPLY =~ ^[Ss]$ ]]; then
 else
     echo -e "${YELLOW}Lembre-se de deletar 'gerar_pass.php' manualmente!${NC}"
 fi
+
+# Retorna ao diretório original
+popd > /dev/null
 
 # --- PASSO 5: Configuração do Apache ---
 echo -e "\n${YELLOW}[PASSO 5/6] Configurando o Apache (SSL e VirtualHost)...${NC}"
