@@ -107,5 +107,7 @@ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ss
     b.Criará as tabelas de **'user'** e **'arranchados'** <br>
     c.Criará o user **'admin'** e **'furriel'** com a senha já criptografa
 ## Lembre-se de **DELETAR gerar_pass.php**
+##### Recomenda-se inserir no crontab para que a database de refeições seja limpa a cada 30 dias
+##### ```1 0 1 * * /usr/bin/sqlite3 /var/www/html/database/refeicoes.sqlite "DELETE FROM arranchados WHERE data_refeicao < date('now')\;" ```
 
 #### 5. Fazer login como admin e inserir os usuários
