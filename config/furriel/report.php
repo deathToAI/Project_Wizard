@@ -3,8 +3,6 @@
 require __DIR__ .'/../../vendor/autoload.php';
 require __DIR__ .'/../../database/DbConnection.php';
 
-
-
 date_default_timezone_set('America/Sao_Paulo');
 //Importação de dependências
 use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Date;
@@ -162,6 +160,103 @@ if ($row == $sheet->getHighestRow()){
   $sheet->setCellValue("B".$sheet->getHighestRow(), "Total: $total");
   $sheet->getStyle("B".$sheet->getHighestRow())->applyFromArray($styleSet);
 }
+$spreadsheet->getActiveSheet()->setPrintGridlines(true);
+//Define nova aba
+$spreadsheet->createSheet();
+$spreadsheet->setActiveSheetIndex(1); // Mudar o índice da aba ativa para o novo
+
+$vale = $spreadsheet->getActiveSheet();
+$vale->setTitle('Vale Diario');
+  // --- TÍTULOS E CABEÇALHOS ---
+$vale->setCellValue('C1', 'visto');
+$vale->setCellValue('H1', '3ª Cia Com Bld');
+$vale->setCellValue('B3', 'Fisc Adm');
+$vale->setCellValue('F4', 'Vale diário para o dia');
+$vale->setCellValue('I4', $userDate->format('d/m/Y'));
+$vale->setCellValue('J5', 'tipo');
+$vale->setCellValue('K5', 'quantidade');
+
+// Subcabeçalhos da tabela
+$vale->setCellValue('B5', '');
+$vale->setCellValue('C5', 'café');
+$vale->setCellValue('D5', 'almoço');
+$vale->setCellValue('E5', 'jantar');
+$vale->setCellValue('F5', 'etapas completas');
+$vale->setCellValue('G5', 'a alimentar');
+$vale->setCellValue('H5', 'A alimentar O OM');
+$vale->setCellValue('I5', 'Soma');
+$vale->setCellValue('J5', 'tipo');
+$vale->setCellValue('K5', 'quantidade');
+
+// Nomes das linhas da tabela
+$vale->setCellValue('B6', 'oficiais');
+$vale->setCellValue('B7', 'subten/sgt');
+$vale->setCellValue('B8', 'cb/sd');
+
+// --- CÉLULAS MESCLADAS ---
+$vale->mergeCells('C1:D1');
+$vale->mergeCells('H1:I1');
+$vale->mergeCells('B3:D3');
+$vale->mergeCells('F4:H4');
+$vale->mergeCells('I4:J4');
+
+// --- DADOS DA TABELA ---
+$vale->setCellValue('C6', count($cafe)/3);
+$vale->setCellValue('D6', count($almoco)/3);
+$vale->setCellValue('E6', count($janta)/3);
+
+$vale->setCellValue('C7', count($cafe)/3);
+$vale->setCellValue('D7', count($almoco)/3);
+$vale->setCellValue('E7', count($janta)/3);
+
+$vale->setCellValue('C8', count($cafe)/3);
+$vale->setCellValue('D8', count($almoco)/3);
+$vale->setCellValue('E8', count($janta)/3);
+
+$vale->setCellValue('G6', count($cafe)/3);
+$vale->setCellValue('G7', count($almoco)/3);
+$vale->setCellValue('G8', count($janta)/3);
+
+// --- FÓRMULAS ---
+// Coluna 'etapas completas' (o LARGE na sua planilha está com erro, corrigido aqui)
+$vale->setCellValue('F6', '=LARGE(C6:E6, 1)');
+$vale->setCellValue('F7', '=LARGE(C7:E7, 1)');
+$vale->setCellValue('F8', '=LARGE(C8:E8, 1)');
+
+// Coluna 'Soma'
+$vale->setCellValue('I6', '=SUM(F6:H6)');
+$vale->setCellValue('I7', '=SUM(F7:H7)');
+$vale->setCellValue('I8', '=SUM(F8:H8)');
+
+// Linha de totais
+$vale->setCellValue('B10', 'SOMA');
+$vale->setCellValue('C10', '=SUM(C6:C8)');
+$vale->setCellValue('D10', '=SUM(D6:D8)');
+$vale->setCellValue('E10', '=SUM(E6:E8)');
+$vale->setCellValue('F10', '=SUM(F6:F8)');
+$vale->setCellValue('G10', '=SUM(G6:G8)');
+$vale->setCellValue('H10', '=SUM(H6:H8)');
+$vale->setCellValue('I10', '=SUM(I6:I8)');
+
+// --- ESTILOS ---
+// Centraliza títulos principais
+$vale->getStyle('H1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$vale->getStyle('B3')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$vale->getStyle('F4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$vale->getStyle('C1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+// Estilos de borda
+$styleArray = [
+    'borders' => [
+        'allBorders' => [
+            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+            'color' => ['argb' => 'FF000000'],
+        ],
+    ],
+];
+
+$vale->getStyle('B5:I8')->applyFromArray($styleArray);
+$vale->getStyle('B10:I10')->applyFromArray($styleArray);
 
 
 //Escreve na planilha
