@@ -12,8 +12,8 @@ if (php_sapi_name() !== 'cli') {
 }
 set_time_limit(300); // 5 minutos de tempo de execução
 
-require __DIR__ .'/../../vendor/autoload.php';
-require __DIR__ .'/../../database/DbConnection.php';
+require __DIR__ .'/../vendor/autoload.php';
+require __DIR__ .'/../database/DbConnection.php';
 
 date_default_timezone_set('America/Sao_Paulo');
 
@@ -27,11 +27,12 @@ try {
     // --- 1. DEFINIR DATA E CAMINHOS ---
     $hoje = new DateTime('now');
     $diaSel = $hoje->format('Y-m-d');
+    $mesSel = $hoje->format('m-Y');
     
     // Diretório base para os relatórios
     $baseReportDir = '/var/www/html/relatorios';
     // Diretório específico para o dia atual, conforme solicitado
-    $dailyReportDir = $baseReportDir . '/' . $diaSel;
+    $dailyReportDir = $baseReportDir . '/' . $mesSel;
 
     // Cria o diretório do dia se ele não existir
     if (!is_dir($dailyReportDir)) {
@@ -39,7 +40,7 @@ try {
             throw new Exception("Falha ao criar o diretório de relatórios: {$dailyReportDir}. Verifique as permissões.");
         }
     }
-
+    $userData=$hoje->format('d/m/Y');
     // Define o nome e o caminho completo do arquivo
     $fileName = "Arranchamento-" . $hoje->format('d-m-Y') . ".xlsx";
     $filePath = $dailyReportDir . '/' . $fileName;
@@ -65,7 +66,7 @@ try {
     $sheet->getStyle("B1")->getFont()->setSize(16)->setBold(true);
     $sheet->mergeCells("A1:A5");
 
-    $brasaoPath = __DIR__ . '/../../public/img/brasao.png';
+    $brasaoPath = __DIR__ . '/../public/img/brasao.png';
     if (file_exists($brasaoPath)) {
         $brasao = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
         $brasao->setName('BrasaoCiaCom');
@@ -133,33 +134,50 @@ try {
     $spreadsheet->createSheet();
     $vale = $spreadsheet->setActiveSheetIndex(1);
     $vale->setTitle('Vale Diario');
-    
-    $vale->setCellValue('C1', 'visto')->setCellValue('H1', '3ª Cia Com Bld')->setCellValue('B3', 'Fisc Adm');
-    $vale->setCellValue('F4', 'Vale diário para o dia')->setCellValue('I4', $hoje->format('d/m/Y'));
-    $vale->setCellValue('B5', '')->setCellValue('C5', 'café')->setCellValue('D5', 'almoço')->setCellValue('E5', 'jantar');
-    $vale->setCellValue('F5', 'etapas completas')->setCellValue('G5', 'a alimentar')->setCellValue('H5', 'A alimentar O OM');
-    $vale->setCellValue('I5', 'Soma')->setCellValue('J5', 'tipo')->setCellValue('K5', 'quantidade');
-    $vale->setCellValue('B6', 'oficiais')->setCellValue('B7', 'subten/sgt')->setCellValue('B8', 'cb/sd');
-    $vale->mergeCells('C1:D1')->mergeCells('H1:I1')->mergeCells('B3:D3')->mergeCells('F4:H4')->mergeCells('I4:J4');
+    //Mergir celular
+    $vale->mergecells('A1:E1')->mergeCells('F1:J1')->mergeCells('A2:E2')->mergeCells('A3:E3')->mergeCells('F3:H3')->mergeCells('I3:J3');
+    $vale->mergeCells('B4:B5')->mergeCells('C4:C5')->mergeCells('D4:D5')->mergeCells('E4:E5');
+    $vale->mergeCells('F4:F5')->mergeCells('G4:G5')->mergeCells('H4:H5')->mergeCells('I4:J4');
+    $vale->mergeCells('E4:E5');
+    //Definir valores estáticos
+    $vale->setCellValue('A1', 'visto')->setCellValue('F1', '3ª Cia Com Bld')->setCellValue('A2', '_____')->setCellValue('A3',"Fisc Adm");
+    $vale->setCellValue('F3', 'Vale diário para o dia')->setCellValue('I3', $hoje->format('d/m/Y'));
+    $vale->setCellValue('B4', 'cafe')->setCellValue('C4', 'almoço')->setCellValue('D4', 'jantar');
+    $vale->setCellValue('A4',"etapas")->setCellValue('A5',"reduzidas");
+    $vale->setCellValue('E4', 'etapas completas')->setCellValue('F4', 'a alimentar')->setCellValue('G4', 'A alimentar O OM');
+    $vale->setCellValue('H4', 'Soma')->setCellValue('I4', 'Quantitativos')->setCellValue('I5', 'tipo')->setCellValue('J5', 'qtd');
+    $vale->setCellValue('A6', 'oficiais')->setCellValue('A7', 'subten/sgt')->setCellValue('A8', 'cb/sd');
+    $vale->setCellValue('I6','QR')->setCellValue('I7','QR')->setCellValue('I8','QR');
+    $vale->setCellValue('I10','CF');
+    $vale->mergeCells('A12:G12');
+    $vale->setCellValue('A12',"Quartel em Santa Maria, $userData");
+    $vale->mergeCells('I13:J13');
+    $vale->mergeCells('I14:J14');
+    $vale->setCellValue('I13','_____');
+    $vale->setCellValue('I14','Furriel');
 
-    $vale->setCellValue('C6', count($cafe)/3)->setCellValue('D6', count($almoco)/3)->setCellValue('E6', count($janta)/3);
-    $vale->setCellValue('C7', count($cafe)/3)->setCellValue('D7', count($almoco)/3)->setCellValue('E7', count($janta)/3);
-    $vale->setCellValue('C8', count($cafe)/3)->setCellValue('D8', count($almoco)/3)->setCellValue('E8', count($janta)/3);
-    $vale->setCellValue('G6', count($cafe)/3)->setCellValue('G7', count($almoco)/3)->setCellValue('G8', count($janta)/3);
+    $vale->setCellValue('B6', count($cafe)/3)->setCellValue('C6', count($almoco)/3)->setCellValue('D6', count($janta)/3);
+    $vale->setCellValue('B7', count($cafe)/3)->setCellValue('C7', count($almoco)/3)->setCellValue('D7', count($janta)/3);
+    $vale->setCellValue('B8', count($cafe)/3)->setCellValue('C8', count($almoco)/3)->setCellValue('D8', count($janta)/3);
+    $vale->setCellValue('F6', count($cafe)/3)->setCellValue('F7', count($almoco)/3)->setCellValue('F8', count($janta)/3);
 
-    $vale->setCellValue('F6', '=LARGE(C6:E6, 1)')->setCellValue('F7', '=LARGE(C7:E7, 1)')->setCellValue('F8', '=LARGE(C8:E8, 1)');
-    $vale->setCellValue('I6', '=SUM(F6:H6)')->setCellValue('I7', '=SUM(F7:H7)')->setCellValue('I8', '=SUM(F8:H8)');
-    $vale->setCellValue('B10', 'SOMA')->setCellValue('C10', '=SUM(C6:C8)')->setCellValue('D10', '=SUM(D6:D8)');
-    $vale->setCellValue('E10', '=SUM(E6:E8)')->setCellValue('F10', '=SUM(F6:F8)')->setCellValue('G10', '=SUM(G6:G8)');
-    $vale->setCellValue('H10', '=SUM(H6:H8)')->setCellValue('I10', '=SUM(I6:I8)');
+    $vale->setCellValue('E6', '=LARGE(B6:D6, 1)')->setCellValue('E7', '=LARGE(B7:D7, 1)')->setCellValue('E8', '=LARGE(B8:D8, 1)');
+    $vale->setCellValue('H6', '=SUM(E6:G6)')->setCellValue('H7', '=SUM(E7:G7)')->setCellValue('H8', '=SUM(E8:G8)');
+    $vale->setCellValue('A10', 'SOMA')->setCellValue('B10', '=SUM(B6:B8)')->setCellValue('C10', '=SUM(C6:C8)');
+    $vale->setCellValue('D10', '=SUM(D6:D8)')->setCellValue('E10', '=SUM(E6:E8)')->setCellValue('F10', '=SUM(F6:F8)');
+    $vale->setCellValue('G10', '=SUM(G6:G8)')->setCellValue('H10', '=SUM(H6:H8)');
 
-    $vale->getStyle('H1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-    $vale->getStyle('B3')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-    $vale->getStyle('F4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-    $vale->getStyle('C1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-    $styleArray = ['borders' => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN, 'color' => ['argb' => 'FF000000']]]];
-    $vale->getStyle('B5:I8')->applyFromArray($styleArray);
-    $vale->getStyle('B10:I10')->applyFromArray($styleArray);
+    $vale->getStyle('G1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+    $vale->getStyle('A3')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+    $vale->getStyle('E4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+    $vale->getStyle('B1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+    $vale->getStyle('A1:J14')->applyFromArray($styleSet);
+    $spreadsheet->getActiveSheet(1)->getPageSetup()
+    ->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_PORTRAIT);
+    $spreadsheet->getActiveSheet(1)->getPageSetup()
+    ->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+    $spreadsheet->getActiveSheet(1)->getPageSetup()
+    ->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4);
 
     // --- 5. SALVAR O ARQUIVO ---
     $spreadsheet->setActiveSheetIndex(0); // Volta para a primeira aba antes de salvar
