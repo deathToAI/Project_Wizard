@@ -50,18 +50,25 @@ echo -e "${GREEN}Pacotes do sistema instalados com sucesso.${NC}"
 # --- PASSO 2: Mover Projeto e Definir Permissões ---
 echo -e "\n${YELLOW}[PASSO 2/6] Movendo arquivos do projeto para ${PROJECT_DEST_DIR}...${NC}"
 mkdir -p "$PROJECT_DEST_DIR"
-rsync -a --exclude='.git' --exclude='.gitignore' --exclude='auto_install.sh' "$PROJECT_SOURCE_DIR/" "$PROJECT_DEST_DIR/"
+rsync -a --exclude='.git' --exclude='.gitignore' --exclude='auto_install.sh' --exclude='README.md' "$PROJECT_SOURCE_DIR/" "$PROJECT_DEST_DIR/"
 chown -R www-data:www-data "$PROJECT_DEST_DIR"
 echo -e "${GREEN}Arquivos movidos e permissões definidas.${NC}"
 
 # --- PASSO 3: Instalar Dependências do PHP ---
 echo -e "\n${YELLOW}[PASSO 3/6] Instalando dependências do PHP com o Composer...${NC}"
-# Usando pushd/popd para mudar de diretório temporariamente
 pushd "$PROJECT_DEST_DIR" > /dev/null
-# Nota: Se o projeto já tiver um 'composer.json', o comando 'composer install' seria mais apropriado.
-if ! sudo -u www-data composer require phpoffice/phpspreadsheet; then
-    echo -e "${RED}ERRO: Falha ao instalar dependências com o Composer.${NC}"
-    exit 1
+if [ -f "composer.json" ]; then
+    echo "Arquivo 'composer.json' encontrado. Instalando dependências..."
+    if ! sudo -u www-data composer install --no-dev --optimize-autoloader; then
+        echo -e "${RED}ERRO: Falha ao executar 'composer install'.${NC}"
+        popd > /dev/null; exit 1
+    fi
+else
+    echo "Arquivo 'composer.json' não encontrado. Adicionando dependência 'phpoffice/phpspreadsheet'..."
+    if ! sudo -u www-data composer require phpoffice/phpspreadsheet; then
+        echo -e "${RED}ERRO: Falha ao executar 'composer require'.${NC}"
+        popd > /dev/null; exit 1
+    fi
 fi
 echo -e "${GREEN}Dependências do Composer instaladas com sucesso.${NC}"
 
@@ -141,13 +148,13 @@ echo "Criando arquivo de configuração do Apache em ${SSL_CONF_PATH}..."
 cat > "$SSL_CONF_PATH" <<EOF
 <VirtualHost *:443>
     ServerName localhost
-    DocumentRoot ${PROJECT_DEST_DIR}
+    DocumentRoot ${PROJECT_DEST_DIR}/public
 
     SSLEngine on
     SSLCertificateFile /etc/apache2/ssl/apache.crt
     SSLCertificateKeyFile /etc/apache2/ssl/apache.key
 
-    <Directory ${PROJECT_DEST_DIR}>
+    <Directory ${PROJECT_DEST_DIR}/public>
         Options Indexes FollowSymLinks
         AllowOverride All
         Require all granted
@@ -167,6 +174,7 @@ cat > /etc/apache2/sites-available/000-default.conf <<EOF
 EOF
 
 a2ensite "${PROJECT_NAME}-ssl.conf"
+a2dissite default-ssl.conf &>/dev/null
 a2dissite 000-default.conf
 
 # --- PASSO 6: Finalização ---
@@ -177,7 +185,7 @@ if ! systemctl restart apache2; then
 fi
 
 echo -e "\n\n${GREEN}--- Instalação e Configuração Concluídas! ---${NC}"
-echo -e "${YELLOW}O projeto foi instalado em: ${PROJECT_DEST_DIR}${NC}"
+echo -e "O projeto foi instalado em: ${YELLOW}${PROJECT_DEST_DIR}${NC}"
 echo -e "${GREEN}Acesse o sistema em: https://localhost${NC}"
 echo -e "${YELLOW}NOTA: Você verá um aviso de segurança no navegador por causa do certificado autoassinado. Isso é normal. Apenas aceite o risco para continuar.${NC}"
 echo -e "\n${GREEN}Tudo pronto! Faça login como 'admin' com a senha que você definiu.${NC}"

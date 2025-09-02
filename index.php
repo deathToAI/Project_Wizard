@@ -37,9 +37,6 @@ if (isset($_SESSION["erro"])) {
 <div>
 
 <?php 
-// echo "Teste de sistema: <br>" ;
-// echo "token: $_SESSION[token]";
-// echo "<br>Role: " . (isset($_SESSION['auth_data']['role']) ? $_SESSION['auth_data']['role'] : 'não autenticado') . "<br>";
 
 include __DIR__ . '/lib/footer.php';
 
