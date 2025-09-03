@@ -12,7 +12,7 @@ sheetFile="Arranchamento-$DIA-$MES-$ANO.xlsx"
 pdfFile="Arranchamento-$DIA-$MES-$ANO.pdf"
 #Chama o script
 
-/usr/bin/php /home/dtai/Projects/Project_Wizard/relatorios/auto_print_report.php
+/usr/bin/php /var/www/html/relatorios/auto_print_report.php
 #Espera fechar e salvar
 echo "Aguarde"
 sleep 5
