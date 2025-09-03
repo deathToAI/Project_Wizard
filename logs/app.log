@@ -9,3 +9,8 @@ n[2025-08-29 20:42:52] [ACCESS] Usuário 'furriel' logado com sucesso.
 [2025-09-01 13:51:04] [ACCESS] Usuário 'furriel' logado com sucesso.
 [2025-09-01 14:06:51] [ACCESS] Usuário 'furriel' logado com sucesso.
 [2025-09-01 14:54:52] [ACCESS] Usuário 'furriel' logado com sucesso.
+[2025-09-02 12:46:20] [ACCESS] Usuário 'admin' logado com sucesso.
+[2025-09-03 13:21:26] [ACCESS] Usuário 'tenrodrigo' logado com sucesso.
+[2025-09-03 13:21:43] [WARNING] Tentativa de mudança de senha falhou para o usuário 'tenrodrigo'. Senha atual incorreta.
+[2025-09-03 13:21:56] [INFO] Senha alterada com sucesso para o usuário 'tenrodrigo'.
+[2025-09-03 13:22:05] [ACCESS] Usuário 'tenrodrigo' logado com sucesso.

@@ -85,4 +85,34 @@ $dates = new DatePeriod(
         </div>
     </form> 
 </div>
+
+<h2 style="margin-top: 40px;">Mudar Senha</h2>
+<div id="change-password" class="card" style="margin-top: 20px;">
+    <h3 align="center">Altere sua senha</h3>
+    <?php if (isset($_SESSION['password_change_status'])): ?>
+        <p align="center" style="color: <?= strpos($_SESSION['password_change_status'], 'sucesso') !== false ? 'green' : 'red'; ?>;">
+            <?= htmlspecialchars($_SESSION['password_change_status']); ?>
+        </p>
+        <?php unset($_SESSION['password_change_status']); ?>
+    <?php endif; ?>
+    <form action="../lib/change_password.php" method="POST" name="changePasswordForm">
+        <table align="center" width="50%" border="0" style="border-collapse: separate; border-spacing: 0 10px;">
+            <tr>
+                <td align="right" style="padding-right: 10px;"><label for="current_password">Senha Atual:</label></td>
+                <td><input type="password" id="current_password" name="current_password" required></td>
+            </tr>
+            <tr>
+                <td align="right" style="padding-right: 10px;"><label for="new_password">Nova Senha:</label></td>
+                <td><input type="password" id="new_password" name="new_password" required></td>
+            </tr>
+            <tr>
+                <td align="right" style="padding-right: 10px;"><label for="confirm_password">Confirmar Nova Senha:</label></td>
+                <td><input type="password" id="confirm_password" name="confirm_password" required></td>
+            </tr>
+        </table>
+        <div style="text-align: center; margin-top: 20px;">
+            <input id="change_password_submit" class="btn_enviar" type="submit" value="Mudar Senha">
+        </div>
+    </form> 
+</div>
 <?php include __DIR__ . '/../lib/footer.php'; ?>
