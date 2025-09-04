@@ -16,25 +16,26 @@ if (isset($_SESSION["erro"])) {
     unset($_SESSION["erro"]); // Limpa o erro após exibir
 }
 ?>
-<div class="card" align="center">
-<h1>Bem vindo ao sistema </h1>
-<form action="lib/auth.php" method="POST"> 
-    
-<label for="usuario">Usuario</label>
-<input type="text" name="usuario" placeholder="sgtfulano"><br>
+<div class="card">
+<h1 style="text-align: center;">Bem vindo ao sistema</h1>
+<div class="login-container">
+    <img src="/public/img/giuseppe256.png" alt="Logo do Sistema" class="login-logo">
+    <form action="lib/auth.php" method="POST"> 
+        
+        <label for="usuario">Usuario</label>
+        <input type="text" id="usuario" name="usuario" placeholder="sgtfulano"><br>
 
+        <label for="password" >Senha</label>
+        <input type="password" id="password" name="senha" placeholder="Senha"> <br>
+        <input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['token']); ?>">
 
-<label for="password" >Senha</label>
-<input type="password" name="senha" placeholder="Senha"> <br>
-<input type="hidden" name="token" value="<?php echo htmlspecialchars($_SESSION['token']); ?>">
-
-<input type="submit" value="Login" name="login">
+        <input type="submit" value="Login" name="login">
+    </form>
+</div>
 <?php if (!empty($erro)): ?>
-<div style="color:red;"> <?php echo $erro; ?>  </div>
+<div class="login-error"> <?php echo $erro; ?>  </div>
 <?php endif; ?>
-
-</form>
-<div>
+</div>
 
 <?php 
 

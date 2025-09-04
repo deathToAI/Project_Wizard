@@ -1,6 +1,7 @@
 
 /* Estilos Gerais e Básicos */
 body {
+  align-content: center;
     font-family: Arial, sans-serif;
     background-color: #f0f2f5; /* Um cinza bem claro para o fundo */
     color: #333; /* Cor de texto principal (cinza escuro) */
@@ -96,6 +97,17 @@ header {
     font-size: 1.5em;
     font-weight: bold;
     color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.navbar .logo:hover {
+    text-decoration: none; /* Evita sublinhar o logo/imagem */
+}
+
+.header-icon {
+    height: 40px;
+    margin-right: 10px;
 }
 
 .navbar .menu {
@@ -154,6 +166,29 @@ header {
     border-top: none;
     border-radius: 0 0 8px 8px; /* Cantos arredondados apenas na base */
 }
+
+/* --- Estilos da Página de Login --- */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem; /* Espaço entre a imagem e o formulário */
+    margin-top: 1rem;
+    flex-wrap: wrap; /* Para telas menores */
+}
+
+.login-logo {
+    height: 120px;
+    width: auto;
+}
+
+.login-error {
+    color: red;
+    text-align: center;
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
 /* Styles.css */
 
 .button {

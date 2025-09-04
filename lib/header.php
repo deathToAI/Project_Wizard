@@ -14,12 +14,14 @@ if (session_status() === PHP_SESSION_NONE) {
     <title>Sistema de Arranchamento</title>
     <!-- Caminho absoluto para o CSS para garantir que funcione em todas as páginas -->
     <link rel="stylesheet" href="/public/css/styles.css">
+    <link rel="icon" type="image/x-icon" href="/public/img/favicon.ico">
 </head>
 <body>
     <header>
+        
         <nav class="navbar">
             <!-- Links com caminhos absolutos para robustez -->
-            <a href="/index.php" class="logo">Arranchamento</a>
+            <a href="/index.php" class="logo"><img class="header-icon" src="/public/img/header-icon.png" alt="Logo"> Arranchamento</a>
             <div class="navbar-right">
                 <span id="relogio"></span>
                 <ul class="menu">
